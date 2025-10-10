@@ -20,39 +20,24 @@ import { v4 as uuidv4 } from 'uuid';
 const products = [
   {
     id: 1,
-    name: 'Anillo de Cráneo de Plata',
-    price: 150,
-    image: 'https://images.unsplash.com/photo-1588892888288-3964467385a4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    name: 'Anillo de Cuervo',
+    price: 120,
+    image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,crow',
+    description: 'Anillo de plata esterlina con un diseño de cuervo detallado, perfecto para un look oscuro y elegante.',
   },
   {
     id: 2,
-    name: 'Anillo de Cráneo de Bronce',
-    price: 120,
-    image: 'https://images.unsplash.com/photo-1611645462295-2152a5c88746?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    name: 'Collar de Luna Negra',
+    price: 250,
+    image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,moon',
+    description: 'Collar de obsidiana con un colgante de luna creciente, ideal para canalizar tu energía nocturna.',
   },
   {
     id: 3,
-    name: 'Anillo de Tentáculos',
+    name: 'Brazalete de Espinas',
     price: 180,
-    image: 'https://images.unsplash.com/photo-1599330283569-03a89372147a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-   {
-    id: 4,
-    name: 'Anillo de Huesos Entrelazados',
-    price: 200,
-    image: 'https://images.unsplash.com/photo-1598104134114-493396a5f795?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 5,
-    name: 'Anillo de Gárgola Gótica',
-    price: 220,
-    image: 'https://images.unsplash.com/photo-1599330283569-03a89372147a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 6,
-    name: 'Anillo de Sello de Calavera',
-    price: 190,
-    image: 'https://images.unsplash.com/photo-1611645462295-2152a5c88746?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,thorns',
+    description: 'Brazalete de plata con un diseño de espinas entrelazadas, una pieza audaz y llamativa.',
   },
 ];
 
@@ -76,17 +61,19 @@ function ProductDetail() {
   const [material, setMaterial] = useState('bronze');
   const [size, setSize] = useState(7);
   const [finish, setFinish] = useState('polished');
-  const [totalPrice, setTotalPrice] = useState(product.price);
+  const [totalPrice, setTotalPrice] = useState(product ? product.price : 0);
 
   useEffect(() => {
-    const calculatePrice = () => {
-      const materialPrice = materialOptions[material].priceModifier;
-      const finishPrice = finishOptions[finish].priceModifier;
-      const finalPrice = product.price + materialPrice + finishPrice;
-      setTotalPrice(finalPrice);
-    };
-    calculatePrice();
-  }, [material, finish, product.price]);
+    if (product) {
+      const calculatePrice = () => {
+        const materialPrice = materialOptions[material].priceModifier;
+        const finishPrice = finishOptions[finish].priceModifier;
+        const finalPrice = product.price + materialPrice + finishPrice;
+        setTotalPrice(finalPrice);
+      };
+      calculatePrice();
+    }
+  }, [material, finish, product]);
 
   const handleAddToCart = () => {
     const cartItem = {
@@ -127,7 +114,7 @@ function ProductDetail() {
             ${totalPrice}
           </Typography>
           <Typography variant="body1" sx={{ mb: 3 }}>
-            Descripción del producto. Aquí puedes añadir más detalles sobre la inspiración, los materiales y el proceso de creación de esta joya.
+            {product.description}
           </Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
