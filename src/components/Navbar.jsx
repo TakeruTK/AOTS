@@ -26,7 +26,7 @@ function Navbar() {
           sx={{
             flexGrow: 1,
             fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
-            fontSize: '1.5rem', // Adjust size for navbar
+            fontSize: '1.5rem',
             color: '#FFFFFF',
             textDecoration: 'none',
             textTransform: 'uppercase',
@@ -85,6 +85,23 @@ function Navbar() {
           }}
         >
           Portfolio
+        </Button>
+        <Button 
+          color="inherit" 
+          component={Link} 
+          to="/about" 
+          sx={{
+            fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+            color: '#CCCCCC',
+            fontSize: '1rem',
+            textTransform: 'none',
+            '&:hover': {
+              color: '#B8860B',
+              backgroundColor: 'transparent'
+            }
+          }}
+        >
+          About
         </Button>
         <IconButton 
           color="inherit" 
