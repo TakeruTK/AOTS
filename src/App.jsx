@@ -6,6 +6,8 @@ import Portfolio from './pages/Portfolio';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Navbar from './components/Navbar';
+import Shop from './pages/Shop';
+import Jewelry from './pages/Jewelry';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/jewelry" element={<Jewelry />} />
       </Routes>
     </>
   );
