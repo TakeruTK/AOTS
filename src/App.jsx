@@ -9,6 +9,7 @@ import Navbar from './components/Navbar';
 import Shop from './pages/Shop';
 import Jewelry from './pages/Jewelry';
 import About from './pages/About';
+import './App.css'; // <-- This is the crucial line I'm adding
 
 function App() {
   return (
