@@ -5,7 +5,6 @@ import {
   Container,
   Typography,
   Grid,
-  Card,
   CardMedia,
   Select,
   MenuItem,
@@ -93,74 +92,187 @@ function ProductDetail() {
     return <Typography>Producto no encontrado</Typography>;
   }
 
+  const selectStyles = {
+    color: '#CCCCCC',
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#B8860B',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#FFFFFF',
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#FFFFFF',
+    },
+    '& .MuiSvgIcon-root': {
+      color: '#B8860B',
+    },
+  };
+
+  const inputLabelStyles = {
+    color: '#B8860B',
+    '&.Mui-focused': {
+      color: '#FFFFFF',
+    },
+  };
+
+  const menuItemStyles = {
+    backgroundColor: '#111',
+    color: '#CCCCCC',
+    fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+    '&:hover': {
+      backgroundColor: '#222'
+    },
+    '&.Mui-selected': {
+      backgroundColor: '#B8860B !important',
+      color: '#000000',
+    }
+  };
+
   return (
-    <Container sx={{ py: 4 }}>
-      <Grid container spacing={{ xs: 2, md: 4 }}>
+    <Container sx={{ py: 4, color: '#CCCCCC' }}>
+      <Grid container spacing={{ xs: 2, md: 6 }}>
         <Grid item xs={12} md={6}>
-          <Card sx={{ backgroundColor: '#1e1e1e' }}>
-            <CardMedia
-              component="img"
-              image={product.image}
-              alt={product.name}
-              sx={{ filter: 'grayscale(80%) brightness(0.8)' }}
-            />
-          </Card>
+          <CardMedia
+            component="img"
+            image={product.image}
+            alt={product.name}
+            sx={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '70vh',
+              objectFit: 'cover',
+              filter: 'grayscale(80%) brightness(0.8)'
+            }}
+          />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Typography variant="h3" component="h1" gutterBottom>
+        <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <Typography
+            variant="h1"
+            component="h1"
+            gutterBottom
+            sx={{
+              fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
+              color: '#FFFFFF',
+              textTransform: 'uppercase',
+              letterSpacing: '0.3em',
+              fontSize: { xs: '2.5rem', md: '3.5rem' },
+            }}
+          >
             {product.name}
           </Typography>
-          <Typography variant="h5" gutterBottom sx={{ color: '#c0c0c0', mb: 3 }}>
+          <Typography
+            variant="h5"
+            gutterBottom
+            sx={{
+              color: '#B8860B',
+              mb: 3,
+              fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+              fontSize: '1.8rem'
+            }}
+          >
             ${totalPrice}
           </Typography>
-          <Typography variant="body1" sx={{ mb: 3 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              mb: 4,
+              fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+              fontSize: '1.1rem',
+              color: '#a9a9a9'
+            }}
+          >
             {product.description}
           </Typography>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, maxWidth: '400px' }}>
             <FormControl fullWidth>
-              <InputLabel id="material-select-label">Material</InputLabel>
+              <InputLabel id="material-select-label" sx={inputLabelStyles}>Material</InputLabel>
               <Select
                 labelId="material-select-label"
                 value={material}
                 label="Material"
                 onChange={(e) => setMaterial(e.target.value)}
+                sx={selectStyles}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#111',
+                    },
+                  },
+                }}
               >
                 {Object.entries(materialOptions).map(([key, value]) => (
-                  <MenuItem key={key} value={key}>{value.label} (+${value.priceModifier})</MenuItem>
+                  <MenuItem key={key} value={key} sx={menuItemStyles}>{value.label} (+${value.priceModifier})</MenuItem>
                 ))}
               </Select>
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel id="size-select-label">Talla</InputLabel>
+              <InputLabel id="size-select-label" sx={inputLabelStyles}>Talla</InputLabel>
               <Select
                 labelId="size-select-label"
                 value={size}
                 label="Talla"
                 onChange={(e) => setSize(e.target.value)}
+                sx={selectStyles}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#111',
+                    },
+                  },
+                }}
               >
                 {[...Array(10).keys()].map((i) => (
-                  <MenuItem key={i + 5} value={i + 5}>Talla {i + 5}</MenuItem>
+                  <MenuItem key={i + 5} value={i + 5} sx={menuItemStyles}>Talla {i + 5}</MenuItem>
                 ))}
               </Select>
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel id="finish-select-label">Acabado</InputLabel>
+              <InputLabel id="finish-select-label" sx={inputLabelStyles}>Acabado</InputLabel>
               <Select
                 labelId="finish-select-label"
                 value={finish}
                 label="Acabado"
                 onChange={(e) => setFinish(e.target.value)}
+                sx={selectStyles}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#111',
+                    },
+                  },
+                }}
               >
                 {Object.entries(finishOptions).map(([key, value]) => (
-                  <MenuItem key={key} value={key}>{value.label} (+${value.priceModifier})</MenuItem>
+                  <MenuItem key={key} value={key} sx={menuItemStyles}>{value.label} (+${value.priceModifier})</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Box>
-          <Button variant="contained" color="primary" sx={{ mt: 4, width: '100%' }} onClick={handleAddToCart}>
+          <Button
+            variant="outlined"
+            onClick={handleAddToCart}
+            sx={{
+              mt: 4,
+              width: '100%',
+              maxWidth: '400px',
+              color: '#CCCCCC',
+              borderColor: '#B8860B',
+              borderWidth: '1px',
+              borderRadius: 0,
+              padding: '12px 24px',
+              fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+              fontSize: '1rem',
+              transition: 'background-color 0.3s, color 0.3s',
+              '&:hover': {
+                backgroundColor: '#B8860B',
+                color: '#000000',
+                borderColor: '#B8860B'
+              }
+            }}
+          >
             Añadir al carrito
           </Button>
         </Grid>

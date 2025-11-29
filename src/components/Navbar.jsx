@@ -5,46 +5,108 @@ import { Link } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import useCartStore from '../store/cartStore';
 
-const navBarStyle = {
-    backgroundColor: '#1a1a1a',
-    fontFamily: "'Creepster', cursive",
-    borderBottom: '2px solid #e53935'
-};
-
-const titleStyle = {
-    flexGrow: 1,
-    textDecoration: 'none',
-    color: '#e53935',
-    fontFamily: "'Nosifer', cursive",
-    textShadow: '2px 2px 4px #000',
-    fontSize: '1.8rem'
-};
-
-const linkStyle = {
-    color: '#f5f5f5',
-    fontFamily: "'Creepster', cursive",
-    fontSize: '1.5rem',
-    margin: '0 10px',
-    textShadow: '1px 1px 2px #000',
-    '&:hover': {
-        color: '#fdd835',
-    }
-};
-
 function Navbar() {
   const cartItemCount = useCartStore((state) => state.items.length);
 
   return (
-    <AppBar position="static" sx={navBarStyle}>
-      <Toolbar>
-        <Typography variant="h6" component={Link} to="/" sx={titleStyle}>
+    <AppBar 
+      position="static" 
+      sx={{ 
+        backgroundColor: 'transparent', 
+        boxShadow: 'none',
+        borderBottom: '1px solid #B8860B',
+        marginBottom: '2em'
+      }}
+    >
+      <Toolbar sx={{ padding: '0 2em' }}>
+        <Typography 
+          variant="h1" 
+          component={Link} 
+          to="/" 
+          sx={{
+            flexGrow: 1,
+            fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
+            fontSize: '1.5rem', // Adjust size for navbar
+            color: '#FFFFFF',
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+            letterSpacing: '0.3em'
+          }}
+        >
           Ashes of the Souls
         </Typography>
-        <Button color="inherit" component={Link} to="/" sx={linkStyle}>Home</Button>
-        <Button color="inherit" component={Link} to="/shop" sx={linkStyle}>Shop</Button>
-        <Button color="inherit" component={Link} to="/portfolio" sx={linkStyle}>Portfolio</Button>
-        <IconButton color="inherit" component={Link} to="/cart" sx={{color: '#f5f5f5'}}>
-          <Badge badgeContent={cartItemCount} color="error">
+        <Button 
+          color="inherit" 
+          component={Link} 
+          to="/" 
+          sx={{
+            fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+            color: '#CCCCCC',
+            fontSize: '1rem',
+            textTransform: 'none',
+            '&:hover': {
+              color: '#B8860B',
+              backgroundColor: 'transparent'
+            }
+          }}
+        >
+          Home
+        </Button>
+        <Button 
+          color="inherit" 
+          component={Link} 
+          to="/shop" 
+          sx={{
+            fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+            color: '#CCCCCC',
+            fontSize: '1rem',
+            textTransform: 'none',
+            '&:hover': {
+              color: '#B8860B',
+              backgroundColor: 'transparent'
+            }
+          }}
+        >
+          Shop
+        </Button>
+        <Button 
+          color="inherit" 
+          component={Link} 
+          to="/portfolio" 
+          sx={{
+            fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
+            color: '#CCCCCC',
+            fontSize: '1rem',
+            textTransform: 'none',
+            '&:hover': {
+              color: '#B8860B',
+              backgroundColor: 'transparent'
+            }
+          }}
+        >
+          Portfolio
+        </Button>
+        <IconButton 
+          color="inherit" 
+          component={Link} 
+          to="/cart" 
+          sx={{ 
+            color: '#CCCCCC',
+            '&:hover': {
+              color: '#B8860B',
+              backgroundColor: 'transparent'
+            }
+          }}
+        >
+          <Badge 
+            badgeContent={cartItemCount} 
+            sx={{
+              '& .MuiBadge-badge': {
+                backgroundColor: '#B8860B',
+                color: '#000000'
+              }
+            }}
+          >
             <ShoppingCartIcon />
           </Badge>
         </IconButton>

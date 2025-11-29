@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import { Grid, Typography, Button } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
 
 const products = [
   {
@@ -36,35 +36,67 @@ const Home = () => {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <div
-        style={{
+    <Box sx={{ padding: { xs: '1rem', md: '2rem' }, width: '100%' }}>
+      <Box
+        sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          height: '400px',
-          backgroundImage: 'url(https://source.unsplash.com/random/1600x900?gothic,dark)',
+          minHeight: '50vh',
+          backgroundImage: 'url(https://source.unsplash.com/random/1600x900?gothic,dark,castle)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           color: 'white',
           textAlign: 'center',
-          marginBottom: '2rem',
+          marginBottom: '4rem',
+          padding: '2rem'
         }}
       >
-        <Typography variant="h2" component="h1" gutterBottom style={{ fontFamily: 'serif' }}>
+        <Typography 
+          variant="h1" 
+          component="h1" 
+          gutterBottom
+          sx={{
+            fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
+            textTransform: 'uppercase',
+            letterSpacing: '0.35em',
+            fontSize: { xs: '2rem', md: '3rem' },
+            color: '#FFFFFF'
+          }}
+        >
           Ashes of the Souls
         </Typography>
-        <Typography variant="h5" component="p" style={{ fontFamily: 'serif' }}>
+        <Typography 
+          className="subtitle"
+          sx={{
+            fontFamily: "'Playfair Display', 'Cormorant Italic', serif",
+            fontStyle: 'italic',
+            color: '#E0E0E0',
+            fontSize: { xs: '1.2rem', md: '1.5rem' }
+          }}
+        >
           Joyería Artesanal para Almas Oscuras
         </Typography>
-      </div>
+      </Box>
 
-      <Typography variant="h4" component="h2" gutterBottom align="center" style={{ fontFamily: 'serif', marginBottom: '2rem' }}>
+      <Typography 
+        variant="h2" 
+        component="h2" 
+        gutterBottom 
+        align="center"
+        sx={{
+          fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
+          textTransform: 'uppercase',
+          letterSpacing: '0.2em',
+          marginBottom: '3rem',
+          color: '#FFFFFF'
+        }}
+      >
         Nuestros Diseños
       </Typography>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={5}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={4} key={product.id}>
             <ProductCard
@@ -74,7 +106,7 @@ const Home = () => {
           </Grid>
         ))}
       </Grid>
-    </div>
+    </Box>
   );
 };
 
