@@ -1,45 +1,22 @@
+
 import React from 'react';
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-  Button,
-  Box,
-} from '@mui/material';
+
+// Removed useCartStore as it's not used directly here anymore
 
 const ProductCard = ({ product, onViewDetails }) => {
-  return (
-    <Card sx={{ backgroundColor: '#1e1e1e', color: 'white', height: '100%' }}>
-      <CardActionArea onClick={onViewDetails} sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-        <CardMedia
-          component="img"
-          image={product.image}
-          alt={product.name}
-          sx={{
-            width: '100%',
-            aspectRatio: '1 / 1',
-            objectFit: 'cover',
-            filter: 'grayscale(80%) brightness(0.8)',
-          }}
-        />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Typography gutterBottom variant="h5" component="div">
-            {product.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ color: '#c0c0c0' }}>
-            ${product.price}
-          </Typography>
-        </CardContent>
-        <Box sx={{ p: 2, pt: 0, alignSelf: 'center' }}>
-          <Button size="small" color="primary" variant="contained" onClick={onViewDetails}>
-            Ver Detalles
-          </Button>
-        </Box>
-      </CardActionArea>
-    </Card>
-  );
+    // The entire card is now clickable
+    return (
+        <div className="product-card" onClick={onViewDetails}>
+            <div className="product-image-container">
+                <img src={product.image} alt={product.name} className="product-image" />
+            </div>
+            <div className="product-info">
+                <p className="product-price">${product.price}</p>
+                <h3 className="product-name">{product.name}</h3>
+                <p className="product-description">{product.description}</p>
+            </div>
+        </div>
+    );
 };
 
 export default ProductCard;

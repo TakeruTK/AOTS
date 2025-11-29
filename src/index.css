@@ -1,0 +1,51 @@
+body {
+  background-color: #000000;
+  color: #CCCCCC;
+  font-family: 'Montserrat Light', 'Lato Light', sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: 'Cinzel Light', 'Cormorant SC', serif;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+h1 {
+  font-size: 3rem;
+  letter-spacing: 0.35em;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+    font-family: 'Montserrat', sans-serif;
+    color: #a9a9a9;
+    font-size: 1.2em;
+    font-weight: 300;
+}
+
+a {
+  color: #B8860B;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #FFFFFF;
+}
+
+.subtitle, .highlight {
+  font-family: 'Playfair Display', 'Cormorant Italic', serif;
+  font-style: italic;
+  color: #E0E0E0;
+}

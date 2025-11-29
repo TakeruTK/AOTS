@@ -6,10 +6,12 @@
 
 ## Estructura y Diseño
 
-*   **Tema:** Oscuro, con una paleta de colores en tonos plateados, dorados y negros.
-*   **Tipografía:** Serif, para un aspecto elegante y clásico.
-*   **Diseño:** Moderno y limpio, con un enfoque en la calidad visual de los productos.
-*   **Componentes:** Uso de la librería Material-UI para una interfaz de usuario consistente y atractiva.
+*   **Estilo Visual:** Arte oscuro, elegante y minimalista. Fondo negro (#000000) con amplios espacios. Acentos en dorado quemado (#B8860B).
+*   **Tipografías:**
+    *   **Títulos:** 'Cinzel Light' (o 'Cormorant SC'), en mayúsculas, con espaciado de letra amplio. Color blanco.
+    *   **Subtítulos:** 'Playfair Display Italic' (o 'Cormorant Italic'). Color gris claro.
+    *   **Cuerpo:** 'Montserrat Light' (o 'Lato Light'). Color gris.
+*   **Diseño:** Minimalista, sobrio y artístico, con un enfoque en la coherencia visual y una estética "Dark Souls".
 
 ## Características Implementadas
 
@@ -28,22 +30,15 @@
     *   **Personalización:**
         *   Selección de material (bronce, plata, oro) con modificadores de precio.
         *   Selección de talla.
-        *   Selección de acabado (pulido, mate, envejecido) con modificadores de precio.
-    *   **Precio dinámico:** El precio total se actualiza en tiempo real según las opciones de personalización seleccionadas.
-    *   Botón "Añadir al carrito" que agrega el producto personalizado al carrito.
-*   **Carrito de Compras:**
-    *   Gestión del estado del carrito con `zustand`.
-    *   Página del carrito que muestra los artículos añadidos, con su imagen, nombre, personalizaciones y precio.
-    *   Cálculo del precio total de la compra.
-    *   Funcionalidad para eliminar artículos individuales del carrito.
-    *   Funcionalidad para vaciar todo el carrito.
-    *   Botón "Proceder al Pago" (actualmente sin funcionalidad).
+*   **Tienda (Shop):**
+    *   Página que agrupa las diferentes categorías de productos.
+    *   Sección de "Joyería Siniestra" que enlaza a la página de joyería.
+    *   Secciones "Próximamente" para Ropa y Artefactos.
+*   **Carrito de Compras (Cart):**
+    *   Muestra los productos agregados al carrito.
+    *   Permite ajustar la cantidad de cada producto.
+    *   Calcula y muestra el precio total.
+    *   Funcionalidad para eliminar productos del carrito.
+*   **Estado Global:**
+    *   Gestión del estado del carrito mediante `zustand`.
 
-## Próximos Pasos
-
-*   **Proceso de Pago:**
-    *   Integrar una pasarela de pago (como Stripe o PayPal).
-*   **Autenticación de Usuarios:**
-    *   Permitir a los usuarios crear cuentas y guardar su información.
-*   **Base de Datos:**
-    *   Migrar los datos de los productos a una base de datos (como Firebase Firestore) para una gestión más sencilla.

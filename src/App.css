@@ -1,0 +1,95 @@
+/* General Body Styles */
+body {
+    background-color: #121212;
+    color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Product Grid Styles */
+.product-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.product-grid-item {
+    flex: 0 1 320px; /* Set the base width */
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Restored Product Card Styles --- */
+.product-card {
+    background-color: #1e1e1e; /* CORRECT BACKGROUND COLOR RESTORED */
+    border: 1px solid #282828;
+    color: #CCCCCC;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.product-image-container {
+    width: 100%;
+    height: 320px; /* Explicitly set height to match width for a square look */
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(80%) brightness(0.8);
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    filter: grayscale(40%) brightness(1);
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 1.5rem 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.product-price {
+    font-family: 'Montserrat Light', 'Lato Light', sans-serif;
+    color: #B8860B;
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
+}
+
+.product-name {
+    font-family: 'Cinzel Light', 'Cormorant SC', serif;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.product-description {
+    font-family: 'Montserrat Light', 'Lato Light', sans-serif;
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    margin: 0;
+    flex-grow: 1;
+    line-height: 1.5;
+}
