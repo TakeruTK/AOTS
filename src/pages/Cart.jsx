@@ -1,11 +1,22 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Typography, Button, Grid, Box, IconButton } from '@mui/material';
 import useCartStore from '../store/cartStore';
 import DeleteIcon from '@mui/icons-material/Delete';
+import '../App.css'; // Make sure to import the CSS file
 
 function Cart() {
   const { items, removeItem, clearCart } = useCartStore();
+  const [removingItemId, setRemovingItemId] = useState(null);
+
+  const handleRemoveItem = (id) => {
+    setRemovingItemId(id);
+    // Wait for the animation to complete before actually removing the item
+    setTimeout(() => {
+      removeItem(id);
+      setRemovingItemId(null);
+    }, 500); // This duration should match the CSS animation duration
+  };
 
   const total = items.reduce((acc, item) => acc + item.price, 0);
 
@@ -39,7 +50,12 @@ function Cart() {
       ) : (
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {items.map((item) => (
-            <Grid item xs={12} key={item.id}>
+            <Grid 
+              item 
+              xs={12} 
+              key={item.id}
+              className={removingItemId === item.id ? 'cart-item-removing' : ''}
+            >
               <Box sx={{
                 display: 'flex',
                 backgroundColor: 'rgba(10, 10, 10, 0.7)',
@@ -92,7 +108,7 @@ function Cart() {
                   </Typography>
                 </Box>
                 <IconButton 
-                  onClick={() => removeItem(item.id)} 
+                  onClick={() => handleRemoveItem(item.id)} 
                   sx={{
                     color: '#B8860B',
                     alignSelf: 'center',

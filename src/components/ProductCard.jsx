@@ -1,22 +1,25 @@
 
 import React from 'react';
 
-// Removed useCartStore as it's not used directly here anymore
-
 const ProductCard = ({ product, onViewDetails }) => {
-    // The entire card is now clickable
-    return (
-        <div className="product-card" onClick={onViewDetails}>
-            <div className="product-image-container">
-                <img src={product.image} alt={product.name} className="product-image" />
-            </div>
-            <div className="product-info">
-                <p className="product-price">${product.price}</p>
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-description">{product.description}</p>
-            </div>
-        </div>
-    );
+  // Find the first image in the media array to display on the card.
+  const mainImage = product.media && product.media.find(m => m.type === 'image');
+
+  // Fallback if no image is found, although every product should have one.
+  const imageUrl = mainImage ? mainImage.src : '/path/to/default-image.jpg';
+
+  return (
+    <div className="product-card" onClick={onViewDetails}>
+      <div className="product-image-container">
+        <img src={imageUrl} alt={product.name} className="product-image" />
+      </div>
+      <div className="product-info">
+        <p className="product-price">${product.price.toFixed(2)}</p>
+        <h3 className="product-name">{product.name}</h3>
+        {/* The description is no longer shown on the card to keep it clean */}
+      </div>
+    </div>
+  );
 };
 
 export default ProductCard;

@@ -1,6 +1,14 @@
 
 import React from 'react';
-import { Container, Typography, ImageList, ImageListItem, ImageListItemBar } from '@mui/material';
+import {
+  Container,
+  Typography,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
 
 const itemData = [
     {
@@ -38,6 +46,16 @@ const itemData = [
 ];
 
 function Portfolio() {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const getCols = () => {
+    if (isSmallScreen) return 1;
+    if (isMediumScreen) return 2;
+    return 3;
+  };
+
   return (
     <Container sx={{ py: 4 }}>
       <Typography
@@ -55,17 +73,20 @@ function Portfolio() {
       >
         Nuestro Legado
       </Typography>
-      <ImageList variant="masonry" cols={3} gap={16}>
+      <ImageList variant="masonry" cols={getCols()} gap={16}>
         {itemData.map((item) => (
           <ImageListItem key={item.img} sx={{
             position: 'relative',
+            overflow: 'hidden', // Hide the bar when it's outside
             '& .MuiImageListItemBar-root': {
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              transition: 'opacity 0.3s ease-in-out',
+              transition: 'transform 0.35s ease-out, opacity 0.35s ease-out',
               opacity: 0,
+              transform: 'translateY(100%)', // Initially hidden at the bottom
             },
             '&:hover .MuiImageListItemBar-root': {
               opacity: 1,
+              transform: 'translateY(0)', // Slide in from the bottom
             },
             '& img': {
               transition: 'filter 0.3s ease-in-out, transform 0.3s ease-in-out',

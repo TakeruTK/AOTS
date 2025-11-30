@@ -16,7 +16,9 @@ const sharedSectionBoxStyle = {
   textAlign: 'center',
   padding: '2rem',
   textDecoration: 'none',
-  border: '1px solid #222'
+  border: '1px solid #222',
+  overflow: 'hidden', // Keep the glow inside
+  transition: 'transform 0.3s ease, box-shadow 0.3s ease'
 };
 
 const overlayStyle = {
@@ -73,7 +75,7 @@ const Shop = () => {
         </Typography>
         <Grid container spacing={4}>
             {sections.map((section) => (
-                <Grid xs={12} md={4} key={section.title}>
+                <Grid item xs={12} md={4} key={section.title}>
                     <Box
                         component={section.enabled ? Link : 'div'}
                         to={section.link}
@@ -82,10 +84,14 @@ const Shop = () => {
                             backgroundImage: `url(${section.imageUrl})`,
                             cursor: section.enabled ? 'pointer' : 'default',
                             '& .overlay': {
-                                backgroundColor: section.enabled ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.85)',
+                                backgroundColor: section.enabled ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.9)',
+                            },
+                            '&:hover': {
+                                transform: section.enabled ? 'translateY(-15px)' : 'none',
+                                boxShadow: section.enabled ? `0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px 5px ${'#B8860B'}` : 'none',
                             },
                             '&:hover .overlay': {
-                                backgroundColor: section.enabled ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.85)',
+                                backgroundColor: section.enabled ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.9)',
                             },
                             '&:hover .section-content': {
                                 transform: section.enabled ? 'translateY(-10px)' : 'none',
@@ -102,7 +108,7 @@ const Shop = () => {
                                     fontSize: '2rem',
                                     letterSpacing: '0.1em',
                                     textTransform: 'uppercase',
-                                    color: section.enabled ? '#FFFFFF' : '#555',
+                                    color: section.enabled ? '#FFFFFF' : '#444', // Darker text for disabled
                                     marginBottom: '1rem'
                                 }}
                             >
@@ -111,7 +117,7 @@ const Shop = () => {
                             <Typography 
                                 sx={{ 
                                     fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
-                                    color: section.enabled ? '#CCCCCC' : '#444',
+                                    color: section.enabled ? '#CCCCCC' : '#333', // Even darker for description
                                 }}
                             >
                                 {section.description}
