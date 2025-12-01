@@ -3,44 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { Typography, Box } from '@mui/material';
-
-const products = [
-    {
-        id: 1,
-        name: 'Anillo de Cuervo',
-        price: 120,
-        image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,crow',
-        description: 'Anillo de plata esterlina con un diseño de cuervo detallado, perfecto para un look oscuro y elegante.',
-    },
-    {
-        id: 2,
-        name: 'Collar de Luna Negra',
-        price: 250,
-        image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,moon',
-        description: 'Collar de obsidiana con un colgante de luna creciente, ideal para canalizar tu energía nocturna.',
-    },
-    {
-        id: 3,
-        name: 'Brazalete de Espinas',
-        price: 180,
-        image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,thorns',
-        description: 'Brazalete de plata con un diseño de espinas entrelazadas, una pieza audaz y llamativa.',
-    },
-    {
-        id: 4,
-        name: 'Pendientes de Calavera',
-        price: 95,
-        image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,skull',
-        description: 'Pendientes de plata con pequeñas calaveras, un toque sutil pero rebelde.',
-    },
-    {
-        id: 5,
-        name: 'Gargantilla de Terciopelo',
-        price: 75,
-        image: 'https://source.unsplash.com/random/800x600?gothic,jewelry,choker',
-        description: 'Gargantilla de terciopelo negro con un camafeo de estilo victoriano.',
-    },
-];
+import { products } from '../data/products'; // Import real product data
 
 const Home = () => {
     const navigate = useNavigate();
@@ -48,6 +11,9 @@ const Home = () => {
     const handleProductClick = (productId) => {
         navigate(`/product/${productId}`);
     };
+
+    // Select a few featured products to display on the home page
+    const featuredProducts = products.slice(0, 4);
 
     return (
         <Box sx={{ padding: { xs: '1rem', md: '2rem' }, width: '100%' }}>
@@ -112,7 +78,7 @@ const Home = () => {
             </Typography>
 
             <div className="product-grid">
-                {products.map((product) => (
+                {featuredProducts.map((product) => (
                     <div className="product-grid-item" key={product.id}>
                         <ProductCard
                             product={product}
