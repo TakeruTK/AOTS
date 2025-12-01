@@ -1,59 +1,85 @@
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Container,
   Typography,
   ImageList,
-  ImageListItem,
-  ImageListItemBar,
   useMediaQuery,
-  useTheme
+  useTheme,
+  Button,
+  Box
 } from '@mui/material';
+import Image from '../components/Image'; // Import the Image component
 
-const itemData = [
-    {
-    img: 'https://images.unsplash.com/photo-1599330283569-03a89372147a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Anillo de Gárgola',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1611645462295-2152a5c88746?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Anillo de Cráneo de Bronce',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1588892888288-3964467385a4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Anillo de Cráneo de Plata',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1598104134114-493396a5f795?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Anillo de Huesos Entrelazados',
-  },
-    {
-    img: 'https://images.unsplash.com/photo-1620755995899-7313a7c64a85?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Colgante de Cuervo',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1599330283569-03a89372147a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Anillo de Gárgola Gótica',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1611645462295-2152a5c88746?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Anillo de Sello de Calavera',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1619659618114-a9c1253b2796?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Estatua de Ángel Caído',
-  },
+// New data source for the portfolio gallery, sorted numerically
+const portfolioImages = [
+  { img: '/imagenes/portafolio/página_1.jpg', title: 'Diseño 1', id: 'portfolio-1' },
+  { img: '/imagenes/portafolio/página_2.jpg', title: 'Diseño 2', id: 'portfolio-2' },
+  { img: '/imagenes/portafolio/página_3.jpg', title: 'Diseño 3', id: 'portfolio-3' },
+  { img: '/imagenes/portafolio/página_4.jpg', title: 'Diseño 4', id: 'portfolio-4' },
+  { img: '/imagenes/portafolio/página_5.jpg', title: 'Diseño 5', id: 'portfolio-5' },
+  { img: '/imagenes/portafolio/página_6.jpg', title: 'Diseño 6', id: 'portfolio-6' },
+  { img: '/imagenes/portafolio/página_7.jpg', title: 'Diseño 7', id: 'portfolio-7' },
+  { img: '/imagenes/portafolio/página_8.jpg', title: 'Diseño 8', id: 'portfolio-8' },
+  { img: '/imagenes/portafolio/página_9.jpg', title: 'Diseño 9', id: 'portfolio-9' },
+  { img: '/imagenes/portafolio/página_10.jpg', title: 'Diseño 10', id: 'portfolio-10' },
+  { img: '/imagenes/portafolio/página_11.jpg', title: 'Diseño 11', id: 'portfolio-11' },
+  { img: '/imagenes/portafolio/página_12.jpg', title: 'Diseño 12', id: 'portfolio-12' },
+  { img: '/imagenes/portafolio/página_13.jpg', title: 'Diseño 13', id: 'portfolio-13' },
+  { img: '/imagenes/portafolio/página_14.jpg', title: 'Diseño 14', id: 'portfolio-14' },
+  { img: '/imagenes/portafolio/página_15.jpg', title: 'Diseño 15', id: 'portfolio-15' },
+  { img: '/imagenes/portafolio/página_16.jpg', title: 'Diseño 16', id: 'portfolio-16' },
+  { img: '/imagenes/portafolio/página_17.jpg', title: 'Diseño 17', id: 'portfolio-17' },
+  { img: '/imagenes/portafolio/página_18.jpg', title: 'Diseño 18', id: 'portfolio-18' },
+  { img: '/imagenes/portafolio/página_19.jpg', title: 'Diseño 19', id: 'portfolio-19' },
+  { img: '/imagenes/portafolio/página_20.jpg', title: 'Diseño 20', id: 'portfolio-20' },
+  { img: '/imagenes/portafolio/página_21.jpg', title: 'Diseño 21', id: 'portfolio-21' },
+  { img: '/imagenes/portafolio/página_22.jpg', title: 'Diseño 22', id: 'portfolio-22' },
+  { img: '/imagenes/portafolio/página_23.jpg', title: 'Diseño 23', id: 'portfolio-23' },
+  { img: '/imagenes/portafolio/página_24.jpg', title: 'Diseño 24', id: 'portfolio-24' },
+  { img: '/imagenes/portafolio/página_25.jpg', title: 'Diseño 25', id: 'portfolio-25' },
+  { img: '/imagenes/portafolio/página_26.jpg', title: 'Diseño 26', id: 'portfolio-26' },
+  { img: '/imagenes/portafolio/página_27.jpg', title: 'Diseño 27', id: 'portfolio-27' },
+  { img: '/imagenes/portafolio/página_28.jpg', title: 'Diseño 28', id: 'portfolio-28' },
 ];
+
+const INITIAL_VISIBLE_ITEMS = 9;
+const ITEMS_TO_LOAD = 9;
 
 function Portfolio() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+  const [visibleItems, setVisibleItems] = useState(INITIAL_VISIBLE_ITEMS);
+
   const getCols = () => {
     if (isSmallScreen) return 1;
     if (isMediumScreen) return 2;
     return 3;
+  };
+
+  const cols = getCols();
+
+  // Reorder images for masonry layout to fill row by row
+  const orderedImages = useMemo(() => {
+    const currentImages = portfolioImages.slice(0, visibleItems);
+    if (cols === 1) {
+      return currentImages;
+    }
+    
+    const reordered = [];
+    for (let i = 0; i < cols; i++) {
+      for (let j = i; j < currentImages.length; j += cols) {
+        reordered.push(currentImages[j]);
+      }
+    }
+    return reordered;
+  }, [visibleItems, cols]);
+
+
+  const handleLoadMore = () => {
+    setVisibleItems(prevVisibleItems => prevVisibleItems + ITEMS_TO_LOAD);
   };
 
   return (
@@ -73,51 +99,29 @@ function Portfolio() {
       >
         Nuestro Legado
       </Typography>
-      <ImageList variant="masonry" cols={getCols()} gap={16}>
-        {itemData.map((item) => (
-          <ImageListItem key={item.img} sx={{
-            position: 'relative',
-            overflow: 'hidden', // Hide the bar when it's outside
-            '& .MuiImageListItemBar-root': {
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              transition: 'transform 0.35s ease-out, opacity 0.35s ease-out',
-              opacity: 0,
-              transform: 'translateY(100%)', // Initially hidden at the bottom
-            },
-            '&:hover .MuiImageListItemBar-root': {
-              opacity: 1,
-              transform: 'translateY(0)', // Slide in from the bottom
-            },
-            '& img': {
-              transition: 'filter 0.3s ease-in-out, transform 0.3s ease-in-out',
-            },
-            '&:hover img': {
-              filter: 'grayscale(20%) brightness(1)',
-              transform: 'scale(1.05)',
-            }
-          }}>
-            <img
-              src={`${item.img}?w=248&fit=crop&auto=format`}
-              srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              alt={item.title}
-              loading="lazy"
-              style={{ filter: 'grayscale(80%) brightness(0.8)', borderRadius: '4px' }}
-            />
-            <ImageListItemBar
-              title={item.title}
-              sx={{
-                fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
-                textAlign: 'center',
-                '& .MuiImageListItemBar-title': {
-                  fontSize: '1.2rem',
-                  letterSpacing: '0.1em',
-                  textShadow: '0px 0px 8px rgba(184, 134, 11, 0.9)'
-                },
-              }}
-            />
-          </ImageListItem>
+      <ImageList variant="masonry" cols={cols} gap={16}>
+        {orderedImages.map((item) => (
+          <Image key={item.id} item={item} />
         ))}
       </ImageList>
+      {visibleItems < portfolioImages.length && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Button
+            variant="outlined"
+            onClick={handleLoadMore}
+            sx={{
+              color: 'goldenrod',
+              borderColor: 'goldenrod',
+              '&:hover': {
+                backgroundColor: 'rgba(218, 165, 32, 0.1)',
+                borderColor: 'goldenrod',
+              },
+            }}
+          >
+            Cargar Más
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 }
