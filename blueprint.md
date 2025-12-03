@@ -13,6 +13,7 @@ Esta aplicación es una sofisticada plataforma de comercio electrónico para "As
 *   **Enrutamiento:** React Router Dom
 *   **Gestión de Estado:** Zustand (para el carrito de la compra)
 *   **Estilos:** CSS centralizado en `src/App.css`
+*   **Internacionalización:** i18next y react-i18next
 
 ### Guía de Estilo y Diseño
 *   **Tema:** Oscuro y gótico.
@@ -85,15 +86,22 @@ Esta aplicación es una sofisticada plataforma de comercio electrónico para "As
     *   El texto se muestra en una caja con fondo semi-transparente y desenfocado, dándole un aspecto "flotante".
     *   Imagen y texto estilizados para integrarse con el tema general.
 
-## 3. Plan de Ejecución (Completado)
+*   **Internacionalización (i18n):**
+    *   **Soporte Bilingüe:** La aplicación ofrece soporte completo para español (ES) e inglés (EN).
+    *   **Gestión de Idioma:** Se utiliza `i18next` y `react-i18next` para gestionar las traducciones.
+    *   **Archivos de Traducción:** Los textos se almacenan en archivos JSON (`src/locales/en/translation.json` y `src/locales/es/translation.json`).
+    *   **Selector de Idioma:** Un componente `LanguageSwitcher.jsx` permite a los usuarios cambiar de idioma.
+    *   **Persistencia:** El idioma seleccionado se guarda en `localStorage` para mantener la preferencia del usuario en futuras visitas.
 
-El objetivo de esta sesión fue realizar una revisión y mejora integral de toda la aplicación. El plan seguido fue:
+## 3. Plan de Ejecución (Internacionalización)
 
-1.  **Inicio y `ProductCard`:** Analizar la estructura inicial y mejorar el efecto de "hover" de las tarjetas de producto en `App.css` para que fuera más pronunciado y coherente con la paleta de colores.
-2.  **`ProductDetails`:** Reemplazar la imagen estática por una galería de imágenes interactiva y refinar los menús de selección y el botón de añadir al carrito.
-3.  **`Cart`:** Mejorar la UX añadiendo una animación de transición suave al eliminar un artículo del carrito.
-4.  **`Portfolio`:** Hacer que la galería de imágenes fuera completamente adaptable y mejorar la animación de "hover" para que fuera más dinámica.
-5.  **`Shop`:** Aumentar la interactividad de las secciones, mejorando los efectos visuales para guiar al usuario.
-6.  **`Jewelry`:** Estandarizar la página moviendo los estilos a `App.css` y utilizando componentes de Material-UI para mantener la consistencia.
-7.  **`About`:** Transformar la página estática en una experiencia más dinámica y visualmente atractiva mediante un efecto de parallax y un diseño de texto mejorado.
-8.  **Documentación:** Crear este archivo `blueprint.md` para servir como una referencia completa del estado actual del proyecto, su diseño y sus características.
+El objetivo de esta sesión es agregar soporte bilingüe (ES/EN) a la aplicación.
+
+1.  **Instalar dependencias:** `npm install i18next react-i18next i18next-browser-languagedetector`
+2.  **Configurar i18next:** Crear `src/i18n.js` para configurar `i18next` con los recursos de traducción y la detección del idioma.
+3.  **Crear archivos de traducción:** Crear `src/locales/en/translation.json` y `src/locales/es/translation.json`.
+4.  **Integrar i18next en la app:** Envolver el componente principal `App` con `I18nextProvider` en `src/main.jsx`.
+5.  **Crear el componente `LanguageSwitcher`:** Desarrollar un componente de React para que el usuario pueda seleccionar el idioma.
+6.  **Extraer textos:** Reemplazar los textos hardcodeados en los componentes JSX con la función `t()` de `react-i18next`.
+7.  **Traducir contenido:** Poblar los archivos `translation.json` con las traducciones correspondientes.
+8.  **Añadir el `LanguageSwitcher` al `Header`:** Integrar el componente de cambio de idioma en la cabecera de la aplicación.

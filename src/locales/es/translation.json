@@ -1,0 +1,44 @@
+{
+  "header": {
+    "home": "Inicio",
+    "jewelry": "Joyería",
+    "portfolio": "Portafolio",
+    "about": "Nosotros",
+    "shop": "Tienda"
+  },
+  "home": {
+    "title": "NUESTROS DISEÑOS"
+  },
+  "product": {
+    "material": "Material",
+    "size": "Talla",
+    "finish": "Acabado",
+    "addToCart": "Añadir al Carrito",
+    "adding": "Añadiendo..."
+  },
+  "cart": {
+    "title": "Carrito de Compras",
+    "total": "Total",
+    "empty": "Vaciar Carrito",
+    "checkout": "Proceder al Pago",
+    "emptyMessage": "Tu carrito está vacío."
+  },
+  "portfolio": {
+    "title": "Portafolio de Creaciones"
+  },
+  "shop": {
+    "jewelry": "Joyería",
+    "witchcraft": "Brujería",
+    "home": "Hogar",
+    "customs": "Personalizados",
+    "tarot": "Tarot",
+    "oils": "Aceites"
+  },
+  "jewelry": {
+    "title": "Nuestros Diseños"
+  },
+  "about": {
+    "title": "Sobre Nosotros",
+    "text": "Ashes of the Souls es un proyecto que nace de la necesidad de crear objetos únicos y con significado, inspirados en la oscuridad y la belleza de lo arcano. Cada pieza es forjada a mano, con pasión y dedicación, buscando capturar la esencia de un mundo oculto a los ojos de los mortales. Nuestras joyas no son meros accesorios, sino talismanes que susurran historias antiguas y nos conectan con nuestra esencia más profunda. En nuestro taller, el metal y el fuego danzan al son de rituales olvidados, dando vida a creaciones que desafían lo efímero y celebran lo eterno."
+  }
+}
