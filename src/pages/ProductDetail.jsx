@@ -11,9 +11,14 @@ import {
   Button, 
   FormControl, 
   InputLabel,
-  CircularProgress 
+  CircularProgress,
+  IconButton,
+  Dialog,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
-import { products } from '../data/products'; // Import the centralized product data
+import { ArrowBackIos, ArrowForwardIos, Close } from '@mui/icons-material';
+import { products } from '../data/products';
 import useCartStore from '../store/cartStore';
 
 function ProductDetail() {
@@ -22,29 +27,47 @@ function ProductDetail() {
   const product = products.find(p => p.id === parseInt(id));
 
   // State hooks
-  const [mainImage, setMainImage] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [material, setMaterial] = useState('Plata 925');
   const [size, setSize] = useState('18mm');
   const [finish, setFinish] = useState('Pulido');
   const [isAdding, setIsAdding] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Effect to safely set the initial image when the product is found
+  const productImages = product?.media?.filter(m => m.type === 'image') || [];
+
   useEffect(() => {
-    if (product && product.media && product.media.length > 0) {
-      const firstImage = product.media.find(m => m.type === 'image');
-      if (firstImage) {
-        setMainImage(firstImage.src);
-      }
-    }
-  }, [product]);
+    window.scrollTo(0, 0);
+    setCurrentImageIndex(0);
+  }, [id]);
 
+  const handleNextImage = (e) => {
+    e.stopPropagation(); // Prevent modal from opening
+    setCurrentImageIndex(prevIndex => (prevIndex + 1) % productImages.length);
+  };
+
+  const handlePrevImage = (e) => {
+    e.stopPropagation(); // Prevent modal from opening
+    setCurrentImageIndex(prevIndex => (prevIndex - 1 + productImages.length) % productImages.length);
+  };
+
+  const handleOpenModal = () => {
+    if (productImages.length > 0) {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  
   const handleAddToCart = () => {
     setIsAdding(true);
     const cartItem = { 
       id: `${product.id}-${material}-${size}-${finish}`,
       name: product.name,
       price: product.price,
-      image: mainImage,
+      image: productImages.length > 0 ? productImages[currentImageIndex].src : '',
       material, 
       size, 
       finish, 
@@ -55,10 +78,9 @@ function ProductDetail() {
     }, 1000);
   };
 
-  // Early return if product is not found
   if (!product) {
     return (
-      <Container sx={{ py: 5, textAlign: 'center' }}>
+      <Container sx={{ py: 5, textAlign: 'center', pt: { xs: 10, md: 12 } }}>
         <Typography variant="h4" component="h1" sx={{ color: '#FFFFFF' }}>
           Producto no encontrado
         </Typography>
@@ -69,33 +91,70 @@ function ProductDetail() {
     );
   }
 
-  // Render the component if the product exists
+  const mainImageSrc = productImages.length > 0 ? productImages[currentImageIndex].src : '';
+
   return (
-    <Container sx={{ py: 4 }}>
-      <Grid container spacing={4}>
-        {/* Image Gallery */}
+    <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4 }}>
+      <Grid container spacing={4} justifyContent="center" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Box sx={{ mb: 2, textAlign: 'center' }}>
-            {mainImage ? (
-              <img src={mainImage} alt={product.name} style={{ width: '100%', maxWidth: '500px', border: '1px solid #333' }} />
+          <Box 
+            onClick={handleOpenModal}
+            sx={{
+              position: 'relative',
+              mb: 2,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: { xs: '400px', md: '500px' },
+              backgroundColor: '#222',
+              border: '1px solid #333',
+              cursor: productImages.length > 0 ? 'pointer' : 'default',
+            }}
+          >
+            {productImages.length > 0 ? (
+              <>
+                <img 
+                  src={mainImageSrc} 
+                  alt={product.name} 
+                  style={{ 
+                    maxWidth: '100%', 
+                    maxHeight: '100%', 
+                    objectFit: 'contain', 
+                  }}
+                />
+                <IconButton
+                  onClick={handlePrevImage}
+                  sx={{ 
+                    position: 'absolute', 
+                    left: 10, 
+                    top: '50%', 
+                    transform: 'translateY(-50%)', 
+                    color: 'white', 
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)'}
+                  }}
+                >
+                  <ArrowBackIos />
+                </IconButton>
+                <IconButton
+                  onClick={handleNextImage}
+                  sx={{ 
+                    position: 'absolute', 
+                    right: 10, 
+                    top: '50%', 
+                    transform: 'translateY(-50%)', 
+                    color: 'white', 
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)'}
+                  }}
+                >
+                  <ArrowForwardIos />
+                </IconButton>
+              </>
             ) : (
-              <Box sx={{ width: '100%', height: '500px', backgroundColor: '#222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography sx={{ color: '#555' }}>Sin imagen</Typography>
-              </Box>
             )}
           </Box>
-          <Grid container spacing={1} justifyContent="center">
-            {product.media.filter(m => m.type === 'image').map((image, index) => (
-              <Grid item key={index} xs={3} sm={2}>
-                <img 
-                  src={image.src} 
-                  alt={`${product.name} thumbnail ${index + 1}`} 
-                  style={{ width: '100%', cursor: 'pointer', border: mainImage === image.src ? '2px solid #B8860B' : '1px solid #333' }}
-                  onClick={() => setMainImage(image.src)}
-                />
-              </Grid>
-            ))}\
-          </Grid>
         </Grid>
 
         {/* Product Details */}
@@ -178,6 +237,55 @@ function ProductDetail() {
           </Button>
         </Grid>
       </Grid>
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        maxWidth="lg"
+        PaperProps={{
+          style: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            boxShadow: 'none',
+            position: 'relative',
+          },
+        }}
+      >
+        <DialogContent sx={{ position: 'relative', p: 0, overflow: 'hidden' }}>
+            <img src={mainImageSrc} alt={product.name} style={{ width: '100%', maxHeight: '90vh', objectFit: 'contain' }} />
+            <IconButton
+              onClick={handlePrevImage}
+              sx={{ 
+                position: 'absolute', 
+                left: 10, 
+                top: '50%', 
+                transform: 'translateY(-50%)', 
+                color: 'white', 
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)'}
+              }}
+            >
+              <ArrowBackIos />
+            </IconButton>
+            <IconButton
+              onClick={handleNextImage}
+              sx={{ 
+                position: 'absolute', 
+                right: 10, 
+                top: '50%', 
+                transform: 'translateY(-50%)', 
+                color: 'white', 
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)'}
+              }}
+            >
+              <ArrowForwardIos />
+            </IconButton>
+        </DialogContent>
+        <DialogActions sx={{position: 'absolute', top: 0, right: 0}}>
+            <IconButton onClick={handleCloseModal} sx={{ color: 'white' }}>
+                <Close />
+            </IconButton>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }

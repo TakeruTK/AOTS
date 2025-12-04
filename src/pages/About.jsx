@@ -7,7 +7,7 @@ function About() {
   return (
     <Box className="about-container">
       <div className="about-parallax-bg"></div>
-      <Container sx={{ py: 4, color: '#CCCCCC', zIndex: 1, position: 'relative' }}>
+      <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4, color: '#CCCCCC', zIndex: 1, position: 'relative' }}>
         <Typography
           variant="h2"
           component="h1"
