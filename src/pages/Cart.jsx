@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
 import { Container, Typography, Button, Grid, Box, IconButton } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import useCartStore from '../store/cartStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import '../App.css'; // Make sure to import the CSS file
 
 function Cart() {
+  const { t } = useTranslation();
   const { items, removeItem, clearCart } = useCartStore();
   const [removingItemId, setRemovingItemId] = useState(null);
 
@@ -35,7 +37,7 @@ function Cart() {
           color: '#FFFFFF'
         }}
       >
-        Carrito de Compras
+        {t('cart.title')}
       </Typography>
       {items.length === 0 ? (
         <Typography 
@@ -45,7 +47,7 @@ function Cart() {
             fontSize: '1.2rem'
           }}
         >
-          Tu carrito está vacío.
+          {t('cart.emptyMessage')}
         </Typography>
       ) : (
         <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -94,7 +96,7 @@ function Cart() {
                       fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
                     }}
                   >
-                    {item.material}, Talla {item.size}, {item.finish}
+                    {t(item.material)}, {t('product.size')} {item.size}, {t(item.finish)}
                   </Typography>
                   <Typography 
                     variant="h6" 
@@ -127,16 +129,17 @@ function Cart() {
       {items.length > 0 && (
         <Grid container justifyContent="flex-end">
           <Grid item xs={12} sm={5} md={4} sx={{ textAlign: 'right' }}>
-            <Typography 
-              variant="h4" 
-              sx={{
-                mb: 2, 
-                fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
-                color: '#FFFFFF'
-              }}
-            >
-              Total: ${total}
-            </Typography>
+          <Typography 
+            variant="h4" 
+            sx={{
+              mb: 2, 
+              fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
+              color: '#FFFFFF',
+              textTransform: 'capitalize' // This ensures the text is capitalized
+            }}
+          >
+            {t('cart.total')} ${total}
+          </Typography>
             <Button 
               variant="contained" 
               fullWidth sx={{
@@ -156,7 +159,7 @@ function Cart() {
                 }
               }}
             >
-              Proceder al Pago
+              {t('cart.checkout')}
             </Button>
             <Button 
               variant="outlined" 
@@ -178,7 +181,7 @@ function Cart() {
                 }
               }}
             >
-              Vaciar Carrito
+              {t('cart.empty')}
             </Button>
           </Grid>
         </Grid>

@@ -2,7 +2,7 @@ export const products = [
   {
     id: 1,
     name: 'Decay Skull',
-    description: 'Un anillo forjado en plata maldita, con una calavera que susurra secretos oscuros.',
+    description: 'product.decay_skull.description',
     price: 210,
     media: [
       { type: 'image', src: '/imagenes/productos/Decay-Skull-A.O.T.S/IMG_20230912_150851_012.jpg' },
@@ -14,7 +14,7 @@ export const products = [
   {
     id: 2,
     name: 'Forgotten Skull',
-    description: 'Fragmentos de huesos de antiguos guerreros, unidos por un hilo de sombras.',
+    description: 'product.forgotten_skull.description',
     price: 225,
     media: [
         { type: 'image', src: '/imagenes/productos/Forgotten-skull-A.O.T.S/IMG_20240312_152338_617.jpg' },
@@ -32,7 +32,7 @@ export const products = [
   {
     id: 3,
     name: 'Decay Darkened Skull V2',
-    description: 'Pequeños murciélagos de obsidiana que cobran vida a la luz de la luna llena.',
+    description: 'product.decay_darkened_skull_v2.description',
     price: 240,
     media: [
       { type: 'image', src: '/imagenes/productos/Decay-Darkened-Skull-V2-A.O.T.S/IMG_20240316_130813_054.jpg' },
@@ -49,7 +49,7 @@ export const products = [
   {
     id: 4,
     name: "Roots of the painful miracle Skull Ring A.O.T.S",
-    description: '[[[POR FAVOR, AÑADE LA DESCRIPCIÓN AQUÍ]]]',
+    description: 'product.roots_of_the_painful_miracle.description',
     price: 250,
     media: [
         { type: 'image', src: '/imagenes/productos/Roots-of-the-painful-miracle-Skull-Ring-A.O.T.S/IMG_20240516_140326_921.jpg' },

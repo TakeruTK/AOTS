@@ -1,12 +1,14 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ProductCard from '../components/ProductCard';
 import { Typography, Box } from '@mui/material';
 import { products } from '../data/products'; // Import real product data
 
 const Home = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleProductClick = (productId) => {
         navigate(`/product/${productId}`);
@@ -57,7 +59,7 @@ const Home = () => {
                         fontSize: { xs: '1.2rem', md: '1.5rem' }
                     }}
                 >
-                    Joyería Artesanal para Almas Oscuras
+                    {t('home.subtitle')}
                 </Typography>
             </Box>
 
@@ -74,7 +76,7 @@ const Home = () => {
                     color: '#FFFFFF'
                 }}
             >
-                Nuestros Diseños
+                {t('home.title')}
             </Typography>
 
             <div className="product-grid">

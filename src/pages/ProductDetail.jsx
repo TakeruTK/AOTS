@@ -18,19 +18,21 @@ import {
   DialogActions
 } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos, Close } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import { products } from '../data/products';
 import useCartStore from '../store/cartStore';
 
 function ProductDetail() {
   const { id } = useParams();
+  const { t } = useTranslation();
   const { addItem } = useCartStore();
   const product = products.find(p => p.id === parseInt(id));
 
   // State hooks
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [material, setMaterial] = useState('Plata 925');
+  const [material, setMaterial] = useState('product.materials.silver_925');
   const [size, setSize] = useState('18mm');
-  const [finish, setFinish] = useState('Pulido');
+  const [finish, setFinish] = useState('product.finishes.polished');
   const [isAdding, setIsAdding] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,12 +44,12 @@ function ProductDetail() {
   }, [id]);
 
   const handleNextImage = (e) => {
-    e.stopPropagation(); // Prevent modal from opening
+    e.stopPropagation();
     setCurrentImageIndex(prevIndex => (prevIndex + 1) % productImages.length);
   };
 
   const handlePrevImage = (e) => {
-    e.stopPropagation(); // Prevent modal from opening
+    e.stopPropagation();
     setCurrentImageIndex(prevIndex => (prevIndex - 1 + productImages.length) % productImages.length);
   };
 
@@ -82,10 +84,10 @@ function ProductDetail() {
     return (
       <Container sx={{ py: 5, textAlign: 'center', pt: { xs: 10, md: 12 } }}>
         <Typography variant="h4" component="h1" sx={{ color: '#FFFFFF' }}>
-          Producto no encontrado
+          {t('productDetail.notFound.title')}
         </Typography>
         <Typography sx={{ color: '#CCCCCC', mt: 2 }}>
-          El producto que buscas no existe o ha sido movido.
+          {t('productDetail.notFound.message')}
         </Typography>
       </Container>
     );
@@ -152,7 +154,7 @@ function ProductDetail() {
                 </IconButton>
               </>
             ) : (
-                <Typography sx={{ color: '#555' }}>Sin imagen</Typography>
+                <Typography sx={{ color: '#555' }}>{t('productDetail.noImage')}</Typography>
             )}
           </Box>
         </Grid>
@@ -166,30 +168,30 @@ function ProductDetail() {
             ${product.price.toFixed(2)} USD
           </Typography>
           <Typography variant="body1" paragraph sx={{ color: '#CCCCCC', lineHeight: 1.7, fontFamily: "'Montserrat Light', sans-serif"}}>
-            {product.description}
+            {t(product.description)}
           </Typography>
 
           {/* Options */}
           <FormControl fullWidth sx={{ my: 1.5 }}>
-            <InputLabel id="material-label" sx={{color: '#CCCCCC'}}>Material</InputLabel>
+            <InputLabel id="material-label" sx={{color: '#CCCCCC'}}>{t('productDetail.materialLabel')}</InputLabel>
             <Select
               labelId="material-label"
               value={material}
-              label="Material"
+              label={t('productDetail.materialLabel')}
               onChange={(e) => setMaterial(e.target.value)}
               sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
             >
-              <MenuItem value="Plata 925">Plata 925</MenuItem>
-              <MenuItem value="Bronce">Bronce</MenuItem>
+              <MenuItem value="product.materials.silver_925">{t('product.materials.silver_925')}</MenuItem>
+              <MenuItem value="product.materials.bronze">{t('product.materials.bronze')}</MenuItem>
             </Select>
           </FormControl>
 
           <FormControl fullWidth sx={{ my: 1.5 }}>
-            <InputLabel id="size-label" sx={{color: '#CCCCCC'}}>Talla (Diámetro Interno)</InputLabel>
+            <InputLabel id="size-label" sx={{color: '#CCCCCC'}}>{t('productDetail.sizeLabel')}</InputLabel>
             <Select
               labelId="size-label"
               value={size}
-              label="Talla (Diámetro Interno)"
+              label={t('productDetail.sizeLabel')}
               onChange={(e) => setSize(e.target.value)}
               sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
             >
@@ -200,17 +202,17 @@ function ProductDetail() {
           </FormControl>
 
           <FormControl fullWidth sx={{ my: 1.5 }}>
-            <InputLabel id="finish-label" sx={{color: '#CCCCCC'}}>Acabado</InputLabel>
+            <InputLabel id="finish-label" sx={{color: '#CCCCCC'}}>{t('productDetail.finishLabel')}</InputLabel>
             <Select
               labelId="finish-label"
               value={finish}
-              label="Acabado"
+              label={t('productDetail.finishLabel')}
               onChange={(e) => setFinish(e.target.value)}
               sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
             >
-              <MenuItem value="Pulido">Pulido (Brillante)</MenuItem>
-              <MenuItem value="Mate">Mate (Sin Brillo)</MenuItem>
-              <MenuItem value="Envejecido">Envejecido (Oscurecido)</MenuItem>
+              <MenuItem value="product.finishes.polished">{t('product.finishes.polished')}</MenuItem>
+              <MenuItem value="product.finishes.matte">{t('product.finishes.matte')}</MenuItem>
+              <MenuItem value="product.finishes.aged">{t('product.finishes.aged')}</MenuItem>
             </Select>
           </FormControl>
 
@@ -233,7 +235,7 @@ function ProductDetail() {
               }
             }}
           >
-            {isAdding ? <CircularProgress size={24} sx={{ color: '#000' }} /> : 'Añadir al Carrito'}
+            {isAdding ? <CircularProgress size={24} sx={{ color: '#000' }} /> : t('product.addToCart')}
           </Button>
         </Grid>
       </Grid>

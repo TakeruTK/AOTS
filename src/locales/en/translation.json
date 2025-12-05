@@ -7,24 +7,55 @@
     "shop": "Shop"
   },
   "home": {
-    "title": "OUR DESIGNS"
+    "title": "OUR DESIGNS",
+    "subtitle": "Handcrafted Jewelry for Dark Souls",
+    "sinisterJewelry": "SINISTER JEWELRY",
+    "sinisterJewelryDescription": "Rings, necklaces, and earrings forged in the flames of the underworld.",
+    "clothing": "CLOTHING",
+    "clothingDescription": "Wear the darkness. Coming soon: t-shirts, hoodies, and more.",
+    "comingSoon": "(Coming Soon)",
+    "artifacts": "ARTIFACTS",
+    "artifactsDescription": "Decorate your den with cursed art and objects."
   },
   "product": {
     "material": "Material",
     "size": "Size",
     "finish": "Finish",
     "addToCart": "Add to Cart",
-    "adding": "Adding..."
+    "adding": "Adding...",
+    "materials": {
+      "silver_925": "Silver 925",
+      "bronze": "Bronze"
+    },
+    "finishes": {
+      "polished": "Polished (Shiny)",
+      "matte": "Matte (No Shine)",
+      "aged": "Aged (Darkened)"
+    },
+    "decay_skull": {
+      "description": "A ring forged in cursed silver, with a skull that whispers dark secrets."
+    },
+    "forgotten_skull": {
+      "description": "Fragments of ancient warriors' bones, bound by a thread of shadows."
+    },
+    "decay_darkened_skull_v2": {
+      "description": "Small obsidian bats that come to life in the light of the full moon."
+    },
+    "roots_of_the_painful_miracle": {
+      "description": "The roots of a painful miracle, manifested in a ring of power and suffering."
+    }
   },
   "cart": {
     "title": "Shopping Cart",
-    "total": "Total",
+    "total": "Total:",
     "empty": "Empty Cart",
     "checkout": "Proceed to Checkout",
     "emptyMessage": "Your cart is empty."
   },
   "portfolio": {
-    "title": "Creations Portfolio"
+    "title": "OUR LEGACY",
+    "loadMore": "LOAD MORE",
+    "design": "Design"
   },
   "shop": {
     "jewelry": "Jewelry",
@@ -38,7 +69,18 @@
     "title": "Our Designs"
   },
   "about": {
-    "title": "About Us",
-    "text": "Ashes of the Souls is a project born from the need to create unique and meaningful objects, inspired by the darkness and beauty of the arcane. Each piece is forged by hand, with passion and dedication, seeking to capture the essence of a world hidden from the eyes of mortals. Our jewels are not mere accessories, but talismans that whisper ancient stories and connect us with our deepest essence. In our workshop, metal and fire dance to the rhythm of forgotten rituals, giving life to creations that challenge the ephemeral and celebrate the eternal."
+    "title": "Our History",
+    "p1": "In the heart of darkness, where beauty and mystery converge, Ashes of the Souls was born. We are not mere jewelers; we are artisans of the arcane, forgers of symbols that whisper forgotten stories. Each piece we create is a pact with shadow and light, a testament to the duality that resides in the human soul.",
+    "p2": "Our materials are extracted from the bowels of the earth and treated with reverential respect. Silver and bronze merge with obsidian and onyx, creating not just ornaments, but amulets of power. We believe that true elegance does not scream, but lurks in the shadows, waiting to be discovered by those who dare to look beyond the veil."
+  },
+  "productDetail": {
+    "notFound": {
+      "title": "Product Not Found",
+      "message": "The product you are looking for does not exist or has been moved."
+    },
+    "noImage": "No Image",
+    "materialLabel": "Material",
+    "sizeLabel": "Size (Internal Diameter)",
+    "finishLabel": "Finish"
   }
 }

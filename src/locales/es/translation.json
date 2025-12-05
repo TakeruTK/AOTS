@@ -7,24 +7,55 @@
     "shop": "Tienda"
   },
   "home": {
-    "title": "NUESTROS DISEÑOS"
+    "title": "NUESTROS DISEÑOS",
+    "subtitle": "Joyería Artesanal para Almas Oscuras",
+    "sinisterJewelry": "JOYERÍA SINIESTRA",
+    "sinisterJewelryDescription": "Anillos, collares y pendientes forjados en las llamas del inframundo.",
+    "clothing": "ROPA",
+    "clothingDescription": "Viste la oscuridad. Próximamente: camisetas, sudaderas y más.",
+    "comingSoon": "(Próximamente)",
+    "artifacts": "ARTEFACTOS",
+    "artifactsDescription": "Decora tu guarida con arte y objetos malditos."
   },
   "product": {
     "material": "Material",
     "size": "Talla",
     "finish": "Acabado",
     "addToCart": "Añadir al Carrito",
-    "adding": "Añadiendo..."
+    "adding": "Añadiendo...",
+    "materials": {
+      "silver_925": "Plata 925",
+      "bronze": "Bronce"
+    },
+    "finishes": {
+      "polished": "Pulido (Brillante)",
+      "matte": "Mate (Sin Brillo)",
+      "aged": "Envejecido (Oscurecido)"
+    },
+    "decay_skull": {
+      "description": "Un anillo forjado en plata maldita, con una calavera que susurra secretos oscuros."
+    },
+    "forgotten_skull": {
+      "description": "Fragmentos de huesos de antiguos guerreros, unidos por un hilo de sombras."
+    },
+    "decay_darkened_skull_v2": {
+      "description": "Pequeños murciélagos de obsidiana que cobran vida a la luz de la luna llena."
+    },
+    "roots_of_the_painful_miracle": {
+      "description": "Las raíces de un milagro doloroso, manifestadas en un anillo de poder y sufrimiento."
+    }
   },
   "cart": {
     "title": "Carrito de Compras",
-    "total": "Total",
+    "total": "Total:",
     "empty": "Vaciar Carrito",
     "checkout": "Proceder al Pago",
     "emptyMessage": "Tu carrito está vacío."
   },
   "portfolio": {
-    "title": "Portafolio de Creaciones"
+    "title": "NUESTRO LEGADO",
+    "loadMore": "CARGAR MÁS",
+    "design": "Diseño"
   },
   "shop": {
     "jewelry": "Joyería",
@@ -38,7 +69,18 @@
     "title": "Nuestros Diseños"
   },
   "about": {
-    "title": "Sobre Nosotros",
-    "text": "Ashes of the Souls es un proyecto que nace de la necesidad de crear objetos únicos y con significado, inspirados en la oscuridad y la belleza de lo arcano. Cada pieza es forjada a mano, con pasión y dedicación, buscando capturar la esencia de un mundo oculto a los ojos de los mortales. Nuestras joyas no son meros accesorios, sino talismanes que susurran historias antiguas y nos conectan con nuestra esencia más profunda. En nuestro taller, el metal y el fuego danzan al son de rituales olvidados, dando vida a creaciones que desafían lo efímero y celebran lo eterno."
+    "title": "Nuestra Historia",
+    "p1": "En el corazón de la oscuridad, donde la belleza y el misterio convergen, nació Ashes of the Souls. No somos meros joyeros; somos artesanos de lo arcano, forjadores de símbolos que susurran historias olvidadas. Cada pieza que creamos es un pacto con la sombra y la luz, un testamento a la dualidad que reside en el alma humana.",
+    "p2": "Nuestros materiales son extraídos de las entrañas de la tierra y tratados con un respeto reverencial. La plata y el bronce se funden con la obsidiana y el ónix, creando no solo adornos, sino amuletos de poder. Creemos que la verdadera elegancia no grita, sino que acecha en las sombras, esperando ser descubierta por aquellos que se atreven a mirar más allá del velo."
+  },
+  "productDetail": {
+    "notFound": {
+      "title": "Producto no encontrado",
+      "message": "El producto que buscas no existe o ha sido movido."
+    },
+    "noImage": "Sin imagen",
+    "materialLabel": "Material",
+    "sizeLabel": "Talla (Diámetro Interno)",
+    "finishLabel": "Acabado"
   }
 }

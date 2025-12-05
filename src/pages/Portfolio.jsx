@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import {
   Container,
@@ -9,38 +8,39 @@ import {
   Button,
   Box
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import Image from '../components/Image'; // Import the Image component
 
 // New data source for the portfolio gallery, sorted numerically
 const portfolioImages = [
-  { img: '/imagenes/portafolio/página_1.jpg', title: 'Diseño 1', id: 'portfolio-1' },
-  { img: '/imagenes/portafolio/página_2.jpg', title: 'Diseño 2', id: 'portfolio-2' },
-  { img: '/imagenes/portafolio/página_3.jpg', title: 'Diseño 3', id: 'portfolio-3' },
-  { img: '/imagenes/portafolio/página_4.jpg', title: 'Diseño 4', id: 'portfolio-4' },
-  { img: '/imagenes/portafolio/página_5.jpg', title: 'Diseño 5', id: 'portfolio-5' },
-  { img: '/imagenes/portafolio/página_6.jpg', title: 'Diseño 6', id: 'portfolio-6' },
-  { img: '/imagenes/portafolio/página_7.jpg', title: 'Diseño 7', id: 'portfolio-7' },
-  { img: '/imagenes/portafolio/página_8.jpg', title: 'Diseño 8', id: 'portfolio-8' },
-  { img: '/imagenes/portafolio/página_9.jpg', title: 'Diseño 9', id: 'portfolio-9' },
-  { img: '/imagenes/portafolio/página_10.jpg', title: 'Diseño 10', id: 'portfolio-10' },
-  { img: '/imagenes/portafolio/página_11.jpg', title: 'Diseño 11', id: 'portfolio-11' },
-  { img: '/imagenes/portafolio/página_12.jpg', title: 'Diseño 12', id: 'portfolio-12' },
-  { img: '/imagenes/portafolio/página_13.jpg', title: 'Diseño 13', id: 'portfolio-13' },
-  { img: '/imagenes/portafolio/página_14.jpg', title: 'Diseño 14', id: 'portfolio-14' },
-  { img: '/imagenes/portafolio/página_15.jpg', title: 'Diseño 15', id: 'portfolio-15' },
-  { img: '/imagenes/portafolio/página_16.jpg', title: 'Diseño 16', id: 'portfolio-16' },
-  { img: '/imagenes/portafolio/página_17.jpg', title: 'Diseño 17', id: 'portfolio-17' },
-  { img: '/imagenes/portafolio/página_18.jpg', title: 'Diseño 18', id: 'portfolio-18' },
-  { img: '/imagenes/portafolio/página_19.jpg', title: 'Diseño 19', id: 'portfolio-19' },
-  { img: '/imagenes/portafolio/página_20.jpg', title: 'Diseño 20', id: 'portfolio-20' },
-  { img: '/imagenes/portafolio/página_21.jpg', title: 'Diseño 21', id: 'portfolio-21' },
-  { img: '/imagenes/portafolio/página_22.jpg', title: 'Diseño 22', id: 'portfolio-22' },
-  { img: '/imagenes/portafolio/página_23.jpg', title: 'Diseño 23', id: 'portfolio-23' },
-  { img: '/imagenes/portafolio/página_24.jpg', title: 'Diseño 24', id: 'portfolio-24' },
-  { img: '/imagenes/portafolio/página_25.jpg', title: 'Diseño 25', id: 'portfolio-25' },
-  { img: '/imagenes/portafolio/página_26.jpg', title: 'Diseño 26', id: 'portfolio-26' },
-  { img: '/imagenes/portafolio/página_27.jpg', title: 'Diseño 27', id: 'portfolio-27' },
-  { img: '/imagenes/portafolio/página_28.jpg', title: 'Diseño 28', id: 'portfolio-28' },
+  { img: '/imagenes/portafolio/página_1.jpg', id: 'portfolio-1' },
+  { img: '/imagenes/portafolio/página_2.jpg', id: 'portfolio-2' },
+  { img: '/imagenes/portafolio/página_3.jpg', id: 'portfolio-3' },
+  { img: '/imagenes/portafolio/página_4.jpg', id: 'portfolio-4' },
+  { img: '/imagenes/portafolio/página_5.jpg', id: 'portfolio-5' },
+  { img: '/imagenes/portafolio/página_6.jpg', id: 'portfolio-6' },
+  { img: '/imagenes/portafolio/página_7.jpg', id: 'portfolio-7' },
+  { img: '/imagenes/portafolio/página_8.jpg', id: 'portfolio-8' },
+  { img: '/imagenes/portafolio/página_9.jpg', id: 'portfolio-9' },
+  { img: '/imagenes/portafolio/página_10.jpg', id: 'portfolio-10' },
+  { img: '/imagenes/portafolio/página_11.jpg', id: 'portfolio-11' },
+  { img: '/imagenes/portafolio/página_12.jpg', id: 'portfolio-12' },
+  { img: '/imagenes/portafolio/página_13.jpg', id: 'portfolio-13' },
+  { img: '/imagenes/portafolio/página_14.jpg', id: 'portfolio-14' },
+  { img: '/imagenes/portafolio/página_15.jpg', id: 'portfolio-15' },
+  { img: '/imagenes/portafolio/página_16.jpg', id: 'portfolio-16' },
+  { img: '/imagenes/portafolio/página_17.jpg', id: 'portfolio-17' },
+  { img: '/imagenes/portafolio/página_18.jpg', id: 'portfolio-18' },
+  { img: '/imagenes/portafolio/página_19.jpg', id: 'portfolio-19' },
+  { img: '/imagenes/portafolio/página_20.jpg', id: 'portfolio-20' },
+  { img: '/imagenes/portafolio/página_21.jpg', id: 'portfolio-21' },
+  { img: '/imagenes/portafolio/página_22.jpg', id: 'portfolio-22' },
+  { img: '/imagenes/portafolio/página_23.jpg', id: 'portfolio-23' },
+  { img: '/imagenes/portafolio/página_24.jpg', id: 'portfolio-24' },
+  { img: '/imagenes/portafolio/página_25.jpg', id: 'portfolio-25' },
+  { img: '/imagenes/portafolio/página_26.jpg', id: 'portfolio-26' },
+  { img: '/imagenes/portafolio/página_27.jpg', id: 'portfolio-27' },
+  { img: '/imagenes/portafolio/página_28.jpg', id: 'portfolio-28' },
 ];
 
 const INITIAL_VISIBLE_ITEMS = 9;
@@ -48,6 +48,7 @@ const ITEMS_TO_LOAD = 9;
 
 function Portfolio() {
   const theme = useTheme();
+  const { t } = useTranslation();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -61,9 +62,16 @@ function Portfolio() {
 
   const cols = getCols();
 
+  const portfolioItems = useMemo(() => {
+    return portfolioImages.map((item, index) => ({
+      ...item,
+      title: `${t('portfolio.design')} ${index + 1}`
+    }));
+  }, [t]);
+
   // Reorder images for masonry layout to fill row by row
   const orderedImages = useMemo(() => {
-    const currentImages = portfolioImages.slice(0, visibleItems);
+    const currentImages = portfolioItems.slice(0, visibleItems);
     if (cols === 1) {
       return currentImages;
     }
@@ -75,7 +83,7 @@ function Portfolio() {
       }
     }
     return reordered;
-  }, [visibleItems, cols]);
+  }, [visibleItems, cols, portfolioItems]);
 
 
   const handleLoadMore = () => {
@@ -97,7 +105,7 @@ function Portfolio() {
           color: '#FFFFFF'
         }}
       >
-        Nuestro Legado
+        {t('portfolio.title')}
       </Typography>
       <ImageList variant="masonry" cols={cols} gap={16}>
         {orderedImages.map((item) => (
@@ -118,7 +126,7 @@ function Portfolio() {
               },
             }}
           >
-            Cargar Más
+            {t('portfolio.loadMore')}
           </Button>
         </Box>
       )}
