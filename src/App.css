@@ -111,15 +111,6 @@ body {
     animation: fadeOut 0.5s ease-out forwards;
 }
 
-/* Sinister Title Style */
-.sinister-title {
-  font-family: "Nosifer", cursive !important;
-  color: #e53935 !important;
-  font-size: 3rem !important;
-  text-shadow: 3px 3px 6px #000 !important;
-  margin: 2rem 0 !important;
-}
-
 /* About Page Styles */
 .about-container {
   position: relative;

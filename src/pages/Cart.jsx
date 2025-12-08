@@ -21,7 +21,7 @@ function Cart() {
   const total = items.reduce((acc, item) => acc + item.price, 0);
 
   return (
-    <Container sx={{ py: 4, color: '#CCCCCC' }}>
+    <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4, color: '#CCCCCC' }}>
       <Typography
         variant="h2"
         component="h1"

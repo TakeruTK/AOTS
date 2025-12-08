@@ -38,7 +38,7 @@ Esta aplicación es una sofisticada plataforma de comercio electrónico para "As
     *   Rutas definidas: `/`, `/product/:id`, `/cart`, `/portfolio`, `/shop`, `/jewelry`, `/about`.
 
 *   **`Header.jsx`:**
-    *   Navegación persistente y adaptable.
+    *   Navegación persistente y adaptable con posición fija.
     *   Fondo semi-transparente con efecto de desenfoque (`backdrop-filter`).
     *   Enlaces de navegación a las páginas principales.
     *   Icono del carrito que muestra el número de artículos y enlaza a la página del carrito.
@@ -52,56 +52,53 @@ Esta aplicación es una sofisticada plataforma de comercio electrónico para "As
     *   Efecto de "hover" avanzado: la tarjeta se eleva, proyecta una sombra dorada, y la imagen interior se acerca y cambia de filtro.
     *   Al hacer clic, redirige a la página de detalles del producto.
 
-*   **`ProductDetails.jsx`:**
+*   **`ProductDetail.jsx`:**
     *   Muestra la vista detallada de un solo producto.
-    *   Galería de imágenes con una imagen principal y miniaturas seleccionables.
-    *   Menús desplegables para seleccionar opciones del producto (material, talla, acabado).
+    *   Galería de imágenes con navegación y vista ampliada en un modal.
+    *   Menús desplegables para seleccionar opciones (material, talla, acabado) con un ancho fijo para evitar saltos en el diseño.
     *   Botón "Añadir al Carrito" con estado de carga visual.
 
 *   **`Cart.jsx`:**
     *   Página del carrito de la compra gestionada con `zustand`.
+    *   Espaciado superior para evitar solapamiento con la barra de navegación.
     *   Muestra los artículos, sus detalles y el precio total.
     *   Permite eliminar artículos individualmente con una animación de "fade-out".
     *   Funcionalidad para vaciar todo el carrito.
-    *   Botones estilizados para "Proceder al Pago" y "Vaciar Carrito".
 
 *   **`Portfolio.jsx`:**
-    *   Galería de imágenes en formato "masonry" (albañilería).
+    *   Galería de imágenes en formato `standard` para un orden visual consistente.
+    *   Navegación en lightbox que sigue el orden de la galería.
     *   Diseño adaptable: 1 columna en móviles, 2 en tabletas y 3 en escritorio.
-    *   Efecto de "hover" mejorado: la barra de título se desliza suavemente desde abajo y la imagen se acerca.
 
 *   **`Shop.jsx`:**
     *   Página que actúa como un portal a diferentes categorías de la tienda.
     *   Las secciones interactivas tienen un efecto de "hover" pronunciado con elevación y un resplandor dorado.
-    *   Las secciones deshabilitadas están visualmente atenuadas para indicar que no están disponibles.
 
 *   **`Jewelry.jsx`:**
     *   Página de categoría para la joyería.
     *   Utiliza el componente `ProductCard` para mostrar los productos en una cuadrícula adaptable.
-    *   Presenta un título temático con la fuente `Nosifer` (`.sinister-title`).
 
 *   **`About.jsx`:**
     *   Página "Sobre Nosotros" con un diseño elevado.
     *   Fondo con efecto de parallax para crear una sensación de profundidad.
-    *   El texto se muestra en una caja con fondo semi-transparente y desenfocado, dándole un aspecto "flotante".
-    *   Imagen y texto estilizados para integrarse con el tema general.
+    *   El texto se muestra en una caja con fondo semi-transparente y desenfocado.
 
 *   **Internacionalización (i18n):**
-    *   **Soporte Bilingüe:** La aplicación ofrece soporte completo para español (ES) e inglés (EN).
-    *   **Gestión de Idioma:** Se utiliza `i18next` y `react-i18next` para gestionar las traducciones.
-    *   **Archivos de Traducción:** Los textos se almacenan en archivos JSON (`src/locales/en/translation.json` y `src/locales/es/translation.json`).
-    *   **Selector de Idioma:** Un componente `LanguageSwitcher.jsx` permite a los usuarios cambiar de idioma.
-    *   **Persistencia:** El idioma seleccionado se guarda en `localStorage` para mantener la preferencia del usuario en futuras visitas.
+    *   Soporte bilingüe (ES/EN) con `i18next`.
+    *   Selector de idioma persistente en el `Header`.
 
-## 3. Plan de Ejecución (Internacionalización)
+## 3. Plan de Ejecución (Últimos Cambios)
 
-El objetivo de esta sesión es agregar soporte bilingüe (ES/EN) a la aplicación.
+El objetivo de esta sesión ha sido refinar la experiencia de usuario y corregir inconsistencias visuales en varias partes de la aplicación.
 
-1.  **Instalar dependencias:** `npm install i18next react-i18next i18next-browser-languagedetector`
-2.  **Configurar i18next:** Crear `src/i18n.js` para configurar `i18next` con los recursos de traducción y la detección del idioma.
-3.  **Crear archivos de traducción:** Crear `src/locales/en/translation.json` y `src/locales/es/translation.json`.
-4.  **Integrar i18next en la app:** Envolver el componente principal `App` con `I18nextProvider` en `src/main.jsx`.
-5.  **Crear el componente `LanguageSwitcher`:** Desarrollar un componente de React para que el usuario pueda seleccionar el idioma.
-6.  **Extraer textos:** Reemplazar los textos hardcodeados en los componentes JSX con la función `t()` de `react-i18next`.
-7.  **Traducir contenido:** Poblar los archivos `translation.json` con las traducciones correspondientes.
-8.  **Añadir el `LanguageSwitcher` al `Header`:** Integrar el componente de cambio de idioma en la cabecera de la aplicación.
+1.  **Corregir Orden de Galería en Portafolio:**
+    *   **Problema:** La galería `masonry` desordenaba las imágenes, causando una navegación inconsistente en el lightbox.
+    *   **Solución:** Se cambió el `variant` de `ImageList` a `standard` y se simplificó la lógica para asegurar un orden secuencial y predecible.
+
+2.  **Solucionar Superposición de la Barra de Navegación:**
+    *   **Problema:** En la página del carrito, el título quedaba oculto por la barra de navegación fija.
+    *   **Solución:** Se añadió un `padding-top` (`pt`) al contenedor principal en `Cart.jsx` para desplazar el contenido hacia abajo.
+
+3.  **Estabilizar Diseño en Detalles del Producto:**
+    *   **Problema:** Los menús desplegables en `ProductDetail.jsx` cambiaban de tamaño según el texto de la opción seleccionada, afectando la alineación.
+    *   **Solución:** Se envolvieron los `FormControl` en un `Box` con `maxWidth` para mantener un ancho uniforme y consistente.

@@ -13,19 +13,24 @@ const Jewelry = () => {
     navigate(`/product/${productId}`);
   };
 
-  // Filter for products that should be displayed on the jewelry page
-  // For now, we assume all products in the file are jewelry.
   const jewelryProducts = products;
 
   return (
-    <Container sx={{ py: 4, textAlign: 'center' }}>
+    <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4, textAlign: 'center' }}>
       <Typography
-        variant="h1"
+        variant="h2"
         component="h1"
-        className="sinister-title"
         gutterBottom
+        align="center"
+        sx={{
+          fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
+          textTransform: 'uppercase',
+          letterSpacing: '0.2em',
+          marginBottom: '3rem',
+          color: '#FFFFFF'
+        }}
       >
-        Joyería Siniestra
+        Joyería
       </Typography>
       <Grid container spacing={4} justifyContent="center">
         {jewelryProducts.map(product => (

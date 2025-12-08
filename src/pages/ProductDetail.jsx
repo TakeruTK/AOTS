@@ -170,49 +170,51 @@ function ProductDetail() {
           </Typography>
 
           {/* Options */}
-          <FormControl fullWidth sx={{ my: 1.5 }}>
-            <InputLabel id="material-label" sx={{color: '#CCCCCC'}}>Material</InputLabel>
-            <Select
-              labelId="material-label"
-              value={material}
-              label="Material"
-              onChange={(e) => setMaterial(e.target.value)}
-              sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
-            >
-              <MenuItem value="Plata 925">Plata 925</MenuItem>
-              <MenuItem value="Bronce">Bronce</MenuItem>
-            </Select>
-          </FormControl>
+          <Box sx={{ width: '100%', maxWidth: 350 }}>
+            <FormControl fullWidth sx={{ my: 1.5 }}>
+              <InputLabel id="material-label" sx={{color: '#CCCCCC'}}>Material</InputLabel>
+              <Select
+                labelId="material-label"
+                value={material}
+                label="Material"
+                onChange={(e) => setMaterial(e.target.value)}
+                sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
+              >
+                <MenuItem value="Plata 925">Plata 925</MenuItem>
+                <MenuItem value="Bronce">Bronce</MenuItem>
+              </Select>
+            </FormControl>
 
-          <FormControl fullWidth sx={{ my: 1.5 }}>
-            <InputLabel id="size-label" sx={{color: '#CCCCCC'}}>Talla (Diámetro Interno)</InputLabel>
-            <Select
-              labelId="size-label"
-              value={size}
-              label="Talla (Diámetro Interno)"
-              onChange={(e) => setSize(e.target.value)}
-              sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
-            >
-              {[...Array(15)].map((_, i) => (
-                  <MenuItem key={i} value={`${15 + i * 0.5}mm`}>{`${15 + i * 0.5}mm`}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <FormControl fullWidth sx={{ my: 1.5 }}>
+              <InputLabel id="size-label" sx={{color: '#CCCCCC'}}>Talla (Diámetro Interno)</InputLabel>
+              <Select
+                labelId="size-label"
+                value={size}
+                label="Talla (Diámetro Interno)"
+                onChange={(e) => setSize(e.target.value)}
+                sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
+              >
+                {[...Array(15)].map((_, i) => (
+                    <MenuItem key={i} value={`${15 + i * 0.5}mm`}>{`${15 + i * 0.5}mm`}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-          <FormControl fullWidth sx={{ my: 1.5 }}>
-            <InputLabel id="finish-label" sx={{color: '#CCCCCC'}}>Acabado</InputLabel>
-            <Select
-              labelId="finish-label"
-              value={finish}
-              label="Acabado"
-              onChange={(e) => setFinish(e.target.value)}
-              sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
-            >
-              <MenuItem value="Pulido">Pulido (Brillante)</MenuItem>
-              <MenuItem value="Mate">Mate (Sin Brillo)</MenuItem>
-              <MenuItem value="Envejecido">Envejecido (Oscurecido)</MenuItem>
-            </Select>
-          </FormControl>
+            <FormControl fullWidth sx={{ my: 1.5 }}>
+              <InputLabel id="finish-label" sx={{color: '#CCCCCC'}}>Acabado</InputLabel>
+              <Select
+                labelId="finish-label"
+                value={finish}
+                label="Acabado"
+                onChange={(e) => setFinish(e.target.value)}
+                sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
+              >
+                <MenuItem value="Pulido">Pulido (Brillante)</MenuItem>
+                <MenuItem value="Mate">Mate (Sin Brillo)</MenuItem>
+                <MenuItem value="Envejecido">Envejecido (Oscurecido)</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
           {/* Add to Cart Button */}
           <Button 
