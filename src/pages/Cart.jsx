@@ -1,190 +1,180 @@
 
 import React, { useState } from 'react';
-import { Container, Typography, Button, Grid, Box, IconButton } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
+import { 
+  Container, 
+  Typography, 
+  Box, 
+  Grid, 
+  Card, 
+  CardMedia, 
+  CardContent, 
+  IconButton, 
+  TextField, 
+  Button, 
+  Divider, 
+  Paper 
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import '../App.css'; // Make sure to import the CSS file
+import { styled } from '@mui/material/styles';
 
-function Cart() {
-  const { items, removeItem, clearCart } = useCartStore();
+// Styled component for a subtle animation on item removal
+const CartItemCard = styled(Card)(({ theme, isRemoving }) => ({
+  display: 'flex',
+  marginBottom: theme.spacing(2),
+  backgroundColor: '#2e2e2e',
+  color: '#f5f5f5',
+  transition: 'opacity 0.5s ease, transform 0.5s ease',
+  opacity: isRemoving ? 0 : 1,
+  transform: isRemoving ? 'translateX(-100%)' : 'none',
+}));
+
+const Cart = () => {
+  const {
+    items,
+    totalPrice,
+    updateQuantity,
+    removeFromCart,
+  } = useCartStore();
+  const navigate = useNavigate();
   const [removingItemId, setRemovingItemId] = useState(null);
 
-  const handleRemoveItem = (id) => {
-    setRemovingItemId(id);
-    // Wait for the animation to complete before actually removing the item
+  const taxRate = 0.08; // 8% tax rate
+  const taxes = totalPrice * taxRate;
+  const totalWithTaxes = totalPrice + taxes;
+
+  // Handle item removal with a delay for the animation
+  const handleRemoveItem = (itemId) => {
+    setRemovingItemId(itemId);
     setTimeout(() => {
-      removeItem(id);
+      removeFromCart(itemId);
       setRemovingItemId(null);
-    }, 500); // This duration should match the CSS animation duration
+    }, 500); // Match timeout with CSS transition duration
   };
 
-  const total = items.reduce((acc, item) => acc + item.price, 0);
+  // Navigate to checkout page
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
 
-  return (
-    <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4, color: '#CCCCCC' }}>
-      <Typography
-        variant="h2"
-        component="h1"
-        gutterBottom
-        align="center"
-        sx={{
-          fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
-          textTransform: 'uppercase',
-          letterSpacing: '0.2em',
-          marginBottom: '3rem',
-          color: '#FFFFFF'
-        }}
-      >
-        Carrito de Compras
-      </Typography>
-      {items.length === 0 ? (
-        <Typography 
-          align="center" 
-          sx={{
-            fontFamily: "'Montserrat Light', 'Lato Light', sans-serif", 
-            fontSize: '1.2rem'
+  if (items.length === 0) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 12, textAlign: 'center', color: '#f5f5f5' }}>
+        <Typography variant="h4" gutterBottom sx={{ fontFamily: 'Cinzel, serif' }}>
+          Your Cart is Empty
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 3 }}>
+          Looks like you haven't added anything to your cart yet.
+        </Typography>
+        <Button 
+          variant="contained" 
+          component={Link} 
+          to="/shop" 
+          sx={{ 
+            backgroundColor: '#B8860B', 
+            color: '#121212',
+            '&:hover': { backgroundColor: '#a0740a'}
           }}
         >
-          Tu carrito está vacío.
-        </Typography>
-      ) : (
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          {items.map((item) => (
-            <Grid 
-              item 
-              xs={12} 
-              key={item.id}
-              className={removingItemId === item.id ? 'cart-item-removing' : ''}
-            >
-              <Box sx={{
-                display: 'flex',
-                backgroundColor: 'rgba(10, 10, 10, 0.7)',
-                padding: 2,
-                border: '1px solid #222',
-              }}>
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  style={{
-                    width: 120,
-                    height: 120,
-                    objectFit: 'cover',
-                    filter: 'grayscale(80%) brightness(0.8)',
-                    marginRight: '1.5rem'
-                  }}
-                />
-                <Box sx={{ flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
-                  <Typography 
-                    component="div" 
-                    variant="h5"
-                    sx={{
-                      fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                      color: '#FFFFFF',
-                    }}
-                  >
+          Continue Shopping
+        </Button>
+      </Container>
+    );
+  }
+
+  return (
+    <Container maxWidth="lg" sx={{ mt: 12 }}>
+      <Typography variant="h3" gutterBottom sx={{ fontFamily: 'Cinzel, serif', color: '#f5f5f5', textAlign: 'center', mb: 4 }}>
+        Shopping Cart
+      </Typography>
+      <Grid container spacing={4} justifyContent="center">
+        <Grid item xs={12} md={7}>
+          {items.map(item => (
+            <CartItemCard key={item.id} isRemoving={removingItemId === item.id}>
+              <CardMedia
+                component="img"
+                sx={{ width: 120, height: 120, objectFit: 'cover' }}
+                image={item.image}
+                alt={item.name}
+              />
+              <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, p: 2 }}>
+                <CardContent sx={{ flex: '1 0 auto', p: 0 }}>
+                  <Typography component="div" variant="h6" sx={{ fontFamily: 'Cinzel, serif' }}>
                     {item.name}
                   </Typography>
-                  <Typography 
-                    variant="subtitle1" 
-                    component="div" 
-                    sx={{
-                      color: '#a9a9a9',
-                      fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
-                    }}
-                  >
-                    {item.material}, Talla {item.size}, {item.finish}
+                  <Typography variant="subtitle1" color="#B8860B" sx={{ my: 1 }}>
+                    ${item.price.toFixed(2)}
                   </Typography>
-                  <Typography 
-                    variant="h6" 
-                    sx={{
-                      mt: 'auto',
-                      color: '#B8860B',
-                      fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
-                    }}
-                  >
-                    ${item.price}
-                  </Typography>
-                </Box>
-                <IconButton 
-                  onClick={() => handleRemoveItem(item.id)} 
-                  sx={{
-                    color: '#B8860B',
-                    alignSelf: 'center',
-                    '&:hover': {
-                      color: '#FFFFFF'
-                    }
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                    <TextField
+                      type="number"
+                      size="small"
+                      variant="outlined"
+                      value={item.quantity}
+                      onChange={(e) => updateQuantity(item.id, parseInt(e.target.value, 10))}
+                      inputProps={{ min: 1, style: { color: '#f5f5f5', width: '40px', textAlign: 'center' } }}
+                      sx={{ 
+                        mr: 2,
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': { borderColor: '#555' },
+                          '&:hover fieldset': { borderColor: '#B8860B' },
+                        }
+                      }}
+                    />
+                    <IconButton aria-label="delete" onClick={() => handleRemoveItem(item.id)} sx={{ color: '#aaa' }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </CardContent>
               </Box>
-            </Grid>
+              <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
+                  <Typography variant="h6" sx={{ fontFamily: 'Montserrat, sans-serif' }}>
+                      ${item.subtotal.toFixed(2)}
+                  </Typography>
+              </Box>
+            </CartItemCard>
           ))}
         </Grid>
-      )}
-      {items.length > 0 && (
-        <Grid container justifyContent="flex-end">
-          <Grid item xs={12} sm={5} md={4} sx={{ textAlign: 'right' }}>
-            <Typography 
-              variant="h4" 
-              sx={{
-                mb: 2, 
-                fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
-                color: '#FFFFFF'
-              }}
-            >
-              Total: ${total}
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 3, backgroundColor: '#1e1e1e', color: '#f5f5f5' }}>
+            <Typography variant="h5" gutterBottom sx={{ fontFamily: 'Cinzel, serif' }}>
+              Order Summary
             </Typography>
-            <Button 
-              variant="contained" 
-              fullWidth sx={{
-                mb: 1,
-                color: '#000000',
+            <Divider sx={{ my: 2, borderColor: '#444' }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+              <Typography>Subtotal</Typography>
+              <Typography>${totalPrice.toFixed(2)}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+              <Typography>Taxes ({(taxRate * 100).toFixed(0)}%)</Typography>
+              <Typography>${taxes.toFixed(2)}</Typography>
+            </Box>
+            <Divider sx={{ my: 2, borderColor: '#444' }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '1.2rem' }}>
+              <Typography variant="h6" sx={{ fontFamily: 'Cinzel, serif' }}>Total</Typography>
+              <Typography variant="h6">${totalWithTaxes.toFixed(2)}</Typography>
+            </Box>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handleCheckout}
+              sx={{ 
+                mt: 3,
+                py: 1.5,
                 backgroundColor: '#B8860B',
-                borderColor: '#B8860B',
-                border: '1px solid',
-                borderRadius: 0, // Sharp edges
-                padding: '10px 24px',
-                fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
-                fontSize: '1rem',
-                transition: 'background-color 0.3s, color 0.3s',
-                '&:hover': {
-                  backgroundColor: '#a3790d',
-                  borderColor: '#a3790d'
-                }
+                color: '#121212',
+                fontSize: '1.1rem',
+                '&:hover': { backgroundColor: '#a0740a' },
               }}
             >
-              Proceder al Pago
+              Proceed to Checkout
             </Button>
-            <Button 
-              variant="outlined" 
-              fullWidth 
-              onClick={clearCart}
-              sx={{
-                color: '#CCCCCC',
-                borderColor: '#B8860B',
-                borderWidth: '1px',
-                borderRadius: 0,
-                padding: '10px 24px',
-                fontFamily: "'Montserrat Light', 'Lato Light', sans-serif",
-                fontSize: '1rem',
-                transition: 'background-color 0.3s, color 0.3s',
-                '&:hover': {
-                  backgroundColor: '#B8860B',
-                  color: '#000000',
-                  borderColor: '#B8860B'
-                }
-              }}
-            >
-              Vaciar Carrito
-            </Button>
-          </Grid>
+          </Paper>
         </Grid>
-      )}
+      </Grid>
     </Container>
   );
-}
+};
 
 export default Cart;

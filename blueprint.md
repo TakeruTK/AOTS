@@ -3,7 +3,7 @@
 
 ## 1. Visión General
 
-Esta aplicación es una sofisticada plataforma de comercio electrónico para "Ashes of the Souls", una marca ficticia especializada en joyería gótica y arcana. El objetivo es proporcionar una experiencia de usuario visualmente inmersiva e interactiva que guíe a los usuarios desde la exploración de productos hasta la compra, todo ello envuelto en una estética oscura y elegante.
+Esta aplicación es una sofisticada plataforma de comercio electrónico para "Ashes of the Souls", una marca ficticia especializada en joyería gótica y arcana. El objetivo es proporcionar una experiencia de usuario visualmente inmersiva e interactiva que guíe a los usuarios desde la exploración de productos hasta un flujo de pago completo y funcional, todo ello envuelto en una estética oscura y elegante.
 
 ## 2. Esquema del Proyecto
 
@@ -12,6 +12,8 @@ Esta aplicación es una sofisticada plataforma de comercio electrónico para "As
 *   **UI:** Material-UI
 *   **Enrutamiento:** React Router Dom
 *   **Gestión de Estado:** Zustand (para el carrito de la compra)
+*   **Backend y Pasarela de Pago:** Express.js, Stripe, dotenv, cors
+*   **Librerías de Stripe:** @stripe/stripe-js, @stripe/react-stripe-js
 *   **Estilos:** CSS centralizado en `src/App.css`
 *   **Internacionalización:** i18next y react-i18next
 
@@ -28,77 +30,59 @@ Esta aplicación es una sofisticada plataforma de comercio electrónico para "As
     *   Títulos Principales: `Cinzel Light`, `Cormorant SC`
     *   Descripciones: `Montserrat Light`, `Lato Light`
     *   Título "Siniestro": `Nosifer`
-*   **Interacción:** Los elementos interactivos presentan animaciones suaves, incluyendo efectos de "elevación" (`transform`), resplandores (`box-shadow`), y transiciones de color y opacidad.
-*   **Diseño Adaptable:** La aplicación está diseñada para ser totalmente funcional y estéticamente agradable en dispositivos móviles, tabletas y ordenadores de sobremesa.
 
 ### Características y Componentes Clave
 
-*   **Enrutamiento (`App.jsx`):**
-    *   Configuración central de las rutas con `react-router-dom`.
-    *   Rutas definidas: `/`, `/product/:id`, `/cart`, `/portfolio`, `/shop`, `/jewelry`, `/about`.
-
 *   **`Header.jsx`:**
-    *   Navegación persistente y adaptable con posición fija.
-    *   Fondo semi-transparente con efecto de desenfoque (`backdrop-filter`).
-    *   Enlaces de navegación a las páginas principales.
-    *   Icono del carrito que muestra el número de artículos y enlaza a la página del carrito.
-
-*   **Página de Inicio (Integrada en `App.jsx`):**
-    *   Presenta una cuadrícula de productos destacados.
-    *   Carga los datos de los productos y gestiona la navegación a las páginas de detalles.
+    *   Navegación persistente y adaptable.
+    *   Icono del carrito que muestra el número de ítems y enlaza a la página del carrito.
 
 *   **`ProductCard.jsx`:**
-    *   Componente reutilizable para mostrar productos.
-    *   Efecto de "hover" avanzado: la tarjeta se eleva, proyecta una sombra dorada, y la imagen interior se acerca y cambia de filtro.
-    *   Al hacer clic, redirige a la página de detalles del producto.
+    *   Componente reutilizable para mostrar productos con un efecto de "hover" avanzado.
+    *   Incluye un botón "Añadir al carrito" que se integra sin alterar el diseño original de la tarjeta.
 
 *   **`ProductDetail.jsx`:**
-    *   Muestra la vista detallada de un solo producto.
-    *   Galería de imágenes con navegación y vista ampliada en un modal.
-    *   Menús desplegables para seleccionar opciones (material, talla, acabado) con un ancho fijo para evitar saltos en el diseño.
-    *   Botón "Añadir al Carrito" con estado de carga visual.
+    *   Vista detallada del producto con galería de imágenes y opciones seleccionables.
+    *   Funcionalidad para añadir productos al carrito.
 
-*   **`Cart.jsx`:**
-    *   Página del carrito de la compra gestionada con `zustand`.
-    *   Espaciado superior para evitar solapamiento con la barra de navegación.
-    *   Muestra los artículos, sus detalles y el precio total.
-    *   Permite eliminar artículos individualmente con una animación de "fade-out".
-    *   Funcionalidad para vaciar todo el carrito.
+*   **Páginas de Flujo de Compra:**
+    *   **`/cart` (`Cart.jsx`):** Página del carrito de compras donde los usuarios pueden ver, modificar la cantidad y eliminar productos. Muestra el total y permite continuar al checkout.
+    *   **`/checkout` (`Checkout.jsx`):** Redirige al usuario a la pasarela de pago de Stripe para completar la transacción de forma segura.
+    *   **`/payment-success` (`PaymentSuccess.jsx`):** Página de agradecimiento que se muestra tras una compra exitosa, limpiando el carrito.
+    *   **`/payment-failed` (`PaymentFailed.jsx`):** Página que informa al usuario si el pago fue cancelado o falló.
 
-*   **`Portfolio.jsx`:**
-    *   Galería de imágenes en formato `standard` para un orden visual consistente.
-    *   Navegación en lightbox que sigue el orden de la galería.
-    *   Diseño adaptable: 1 columna en móviles, 2 en tabletas y 3 en escritorio.
+*   **Gestión de Estado del Carrito (`cartStore.js`):**
+    *   Manejo centralizado del estado del carrito con Zustand.
+    *   Funciones: `addToCart`, `removeFromCart`, `updateQuantity`, `clearCart`.
+    *   Estado: `items`, `totalItems`, `totalPrice`.
 
-*   **`Shop.jsx`:**
-    *   Página que actúa como un portal a diferentes categorías de la tienda.
-    *   Las secciones interactivas tienen un efecto de "hover" pronunciado con elevación y un resplandor dorado.
+*   **Backend (`server.js`):**
+    *   Servidor Express.js que gestiona la comunicación con la API de Stripe.
+    *   Endpoint `/create-checkout-session` para iniciar una nueva transacción.
+    *   Endpoint `/webhook` para recibir y procesar eventos de Stripe (ej. `checkout.session.completed`).
 
-*   **`Jewelry.jsx`:**
-    *   Página de categoría para la joyería.
-    *   Utiliza el componente `ProductCard` para mostrar los productos en una cuadrícula adaptable.
+## 3. Plan de Ejecución: Implementación del Flujo de Compra
 
-*   **`About.jsx`:**
-    *   Página "Sobre Nosotros" con un diseño elevado.
-    *   Fondo con efecto de parallax para crear una sensación de profundidad.
-    *   El texto se muestra en una caja con fondo semi-transparente y desenfocado.
+El objetivo es construir una funcionalidad de comercio electrónico completa, desde la selección de productos hasta un pago real, utilizando Stripe como pasarela de pago.
 
-*   **Internacionalización (i18n):**
-    *   Soporte bilingüe (ES/EN) con `i18next`.
-    *   Selector de idioma persistente en el `Header`.
+### Fase 1: Estructura del Carrito
+1.  **Configurar Zustand:** Crear el store `cartStore.js` para gestionar el estado del carrito de la compra.
+2.  **Ampliar `cartStore`:** Implementar la lógica de `addToCart`, `updateQuantity`, `removeFromCart` y el cálculo de subtotales y total.
+3.  **Integrar Botón en `ProductCard`:** Añadir un botón "Añadir al carrito" en las tarjetas de producto.
+4.  **Actualizar `Header`:** Añadir un icono de carrito que muestre la cantidad de productos y enlace a la página `/cart`.
 
-## 3. Plan de Ejecución (Últimos Cambios)
+### Fase 2: Páginas de Compra
+1.  **Crear Nuevas Rutas:** Añadir las rutas `/checkout`, `/payment-success`, y `/payment-failed` en `App.jsx`.
+2.  **Construir `Cart.jsx`:** Desarrollar la página del carrito para que sea funcional, permitiendo la edición de cantidades, la eliminación de productos, la visualización del total y la navegación hacia el checkout.
+3.  **Crear Páginas de Resultado:** Implementar las páginas `PaymentSuccess.jsx` y `PaymentFailed.jsx`.
 
-El objetivo de esta sesión ha sido refinar la experiencia de usuario y corregir inconsistencias visuales en varias partes de la aplicación.
+### Fase 3: Lógica de la Pasarela de Pago con Stripe
+1.  **Configurar el Servidor Express:** Instalar dependencias (`express`, `stripe`, `dotenv`, `cors`) y crear `server.js` para manejar los endpoints `/create-checkout-session` y `/webhook`.
+2.  **Integrar Firebase MCP:** Configurar `.idx/mcp.json` para ejecutar el servidor Express junto a la aplicación de React.
+3.  **Construir `Checkout.jsx`:** Implementar la lógica para llamar al servidor local, crear una sesión de Stripe, y redirigir al usuario a la página de pago de Stripe.
+4.  **Desarrollar Páginas de Resultado:** Crear las páginas `PaymentSuccess.jsx` (que limpia el carrito) y `PaymentFailed.jsx` basadas en la redirección de Stripe.
 
-1.  **Corregir Orden de Galería en Portafolio:**
-    *   **Problema:** La galería `masonry` desordenaba las imágenes, causando una navegación inconsistente en el lightbox.
-    *   **Solución:** Se cambió el `variant` de `ImageList` a `standard` y se simplificó la lógica para asegurar un orden secuencial y predecible.
-
-2.  **Solucionar Superposición de la Barra de Navegación:**
-    *   **Problema:** En la página del carrito, el título quedaba oculto por la barra de navegación fija.
-    *   **Solución:** Se añadió un `padding-top` (`pt`) al contenedor principal en `Cart.jsx` para desplazar el contenido hacia abajo.
-
-3.  **Estabilizar Diseño en Detalles del Producto:**
-    *   **Problema:** Los menús desplegables en `ProductDetail.jsx` cambiaban de tamaño según el texto de la opción seleccionada, afectando la alineación.
-    *   **Solución:** Se envolvieron los `FormControl` en un `Box` con `maxWidth` para mantener un ancho uniforme y consistente.
+### Fase 4: Estilo y Buenas Prácticas
+1.  **Componentes Reutilizables:** Crear componentes limpios y reutilizables.
+2.  **Comentarios para Desarrolladores:** Dejar comentarios claros en el código en todos los puntos de integración.
+3.  **Consistencia Visual:** Asegurar que todas las nuevas páginas y componentes sigan la guía de estilo del proyecto.

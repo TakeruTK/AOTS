@@ -23,7 +23,7 @@ import useCartStore from '../store/cartStore';
 
 function ProductDetail() {
   const { id } = useParams();
-  const { addItem } = useCartStore();
+  const { addToCart } = useCartStore(); // Changed from addItem to addToCart
   const product = products.find(p => p.id === parseInt(id));
 
   // State hooks
@@ -73,7 +73,7 @@ function ProductDetail() {
       finish, 
     };
     setTimeout(() => {
-      addItem(cartItem);
+      addToCart(cartItem); // Changed from addItem to addToCart
       setIsAdding(false);
     }, 1000);
   };

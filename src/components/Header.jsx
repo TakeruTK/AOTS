@@ -9,7 +9,8 @@ import useCartStore from '../store/cartStore';
 
 const Header = () => {
   const { t } = useTranslation();
-  const items = useCartStore((state) => state.items);
+  // We now get the total number of items directly from our zustand store
+  const totalItems = useCartStore((state) => state.totalItems);
 
   return (
     <AppBar position="fixed" sx={{ 
@@ -28,11 +29,14 @@ const Header = () => {
         <Button color="inherit" component={Link} to="/shop" sx={{ fontFamily: 'Cinzel, serif' }}>{t('header.shop')}</Button>
         <Button color="inherit" component={Link} to="/portfolio" sx={{ fontFamily: 'Cinzel, serif' }}>{t('header.portfolio')}</Button>
         <Button color="inherit" component={Link} to="/about" sx={{ fontFamily: 'Cinzel, serif' }}>{t('header.about')}</Button>
+        
+        {/* The Cart icon now links to the /cart page and displays the total number of items */}
         <IconButton color="inherit" component={Link} to="/cart">
-          <Badge badgeContent={items.length} color="error">
+          <Badge badgeContent={totalItems} color="error">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
+
         <LanguageSwitcher />
       </Toolbar>
     </AppBar>
