@@ -1,25 +1,112 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import enTranslation from './locales/en/translation.json';
-import esTranslation from './locales/es/translation.json';
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources: {
-      en: {
-        translation: enTranslation,
-      },
-      es: {
-        translation: esTranslation,
+i18n.use(initReactI18next).init({
+  resources: {
+    en: {
+      translation: {
+        subtitle: 'Handcrafted Jewelry for Dark Souls',
+        featured_products: 'OUR DESIGNS',
+        'header.home': 'HOME',
+        'header.shop': 'SHOP',
+        'header.portfolio': 'PORTFOLIO',
+        'header.about': 'ABOUT',
+        'shop.title': 'Shop',
+        'shop.jewelry.title': 'Jewelry',
+        'shop.jewelry.description': 'Rings, necklaces, and pendants forged in the flames of the underworld.',
+        'shop.clothing.title': 'Clothing',
+        'shop.clothing.description': 'Wear the darkness. Soon, t-shirts, sweatshirts, and more.',
+        'shop.artifacts.title': 'Artifacts',
+        'shop.artifacts.description': 'Decorate your den with art and cursed objects.',
+        'shop.coming_soon': '(Coming Soon)',
+        'product.material': 'Material',
+        'product.size': 'Size (Internal Diameter)',
+        'product.finish': 'Finish',
+        'product.add_to_cart': 'Add to Cart',
+        'product.not_found_title': 'Product not found',
+        'product.not_found_message': 'The product you are looking for does not exist or has been moved.',
+        'product.no_image': 'No image',
+        'product.material.silver': '925 Silver',
+        'product.material.bronze': 'Bronze',
+        'product.finish.polished': 'Polished (Shiny)',
+        'product.finish.matte': 'Matte (No Shine)',
+        'product.finish.aged': 'Aged (Darkened)',
+        'product.1.description': 'A ring forged in cursed silver, with a skull that whispers dark secrets.',
+        'product.2.description': 'Fragments of bones from ancient warriors, bound by a thread of shadows.',
+        'product.3.description': 'Small obsidian bats that come to life in the light of the full moon.',
+        'product.4.description': 'Roots of the painful miracle, a skull ring by A.O.T.S.',
+        'portfolio.title': 'Our Legacy',
+        'portfolio.load_more': 'Load More',
+        'about.title': 'Our Story',
+        'about.p1': 'In the heart of darkness, where beauty and mystery converge, Ashes of the Souls was born. We are not mere jewelers; we are artisans of the arcane, forgers of symbols that whisper forgotten stories. Each piece we create is a pact with the shadow and the light, a testament to the duality that resides in the human soul.',
+        'about.p2': 'Our materials are extracted from the bowels of the earth and treated with reverential respect. Silver and bronze are fused with obsidian and onyx, creating not just ornaments, but amulets of power. We believe that true elegance does not shout, but lurks in the shadows, waiting to be discovered by those who dare to look beyond the veil.',
+        'about.image_alt': 'Artisan\'s hand',
+        'cart.empty.title': 'Your Cart is Empty',
+        'cart.empty.message': 'Looks like you haven\'t added anything to your cart yet.',
+        'cart.empty.continue_shopping': 'Continue Shopping',
+        'cart.title': 'Shopping Cart',
+        'cart.summary.title': 'Order Summary',
+        'cart.summary.subtotal': 'Subtotal',
+        'cart.summary.taxes': 'Taxes ({{rate}}%)',
+        'cart.summary.total': 'Total',
+        'cart.summary.checkout_button': 'Proceed to Checkout'
       },
     },
-    fallbackLng: 'es',
-    interpolation: {
-      escapeValue: false,
+    es: {
+      translation: {
+        subtitle: 'Joyería Artesanal para Almas Oscuras',
+        featured_products: 'NUESTROS DISEÑOS',
+        'header.home': 'INICIO',
+        'header.shop': 'TIENDA',
+        'header.portfolio': 'PORTAFOLIO',
+        'header.about': 'SOBRE NOSOTROS',
+        'shop.title': 'Tienda',
+        'shop.jewelry.title': 'Joyería',
+        'shop.jewelry.description': 'Anillos, collares y pendientes forjados en las llamas del inframundo.',
+        'shop.clothing.title': 'Ropa',
+        'shop.clothing.description': 'Viste la oscuridad. Próximamente, camisetas, sudaderas y más.',
+        'shop.artifacts.title': 'Artefactos',
+        'shop.artifacts.description': 'Decora tu guarida con arte y objetos malditos.',
+        'shop.coming_soon': '(Próximamente)',
+        'product.material': 'Material',
+        'product.size': 'Talla (Diámetro Interno)',
+        'product.finish': 'Acabado',
+        'product.add_to_cart': 'Añadir al Carrito',
+        'product.not_found_title': 'Producto no encontrado',
+        'product.not_found_message': 'El producto que buscas no existe o ha sido movido.',
+        'product.no_image': 'Sin imagen',
+        'product.material.silver': 'Plata 925',
+        'product.material.bronze': 'Bronce',
+        'product.finish.polished': 'Pulido (Brillante)',
+        'product.finish.matte': 'Mate (Sin Brillo)',
+        'product.finish.aged': 'Envejecido (Oscurecido)',
+        'product.1.description': 'Un anillo forjado en plata maldita, con una calavera que susurra secretos oscuros.',
+        'product.2.description': 'Fragmentos de huesos de antiguos guerreros, unidos por un hilo de sombras.',
+        'product.3.description': 'Pequeños murciélagos de obsidiana que cobran vida a la luz de la luna llena.',
+        'product.4.description': 'Raíces de un milagro doloroso, un anillo de calavera de A.O.T.S.',
+        'portfolio.title': 'Nuestro Legado',
+        'portfolio.load_more': 'Cargar Más',
+        'about.title': 'Nuestra Historia',
+        'about.p1': 'En el corazón de la oscuridad, donde la belleza y el misterio convergen, nació Ashes of the Souls. No somos meros joyeros; somos artesanos de lo arcano, forjadores de símbolos que susurran historias olvidadas. Cada pieza que creamos es un pacto con la sombra y la luz, un testamento a la dualidad que reside en el alma humana.',
+        'about.p2': 'Nuestros materiales son extraídos de las entrañas de la tierra y tratados con un respeto reverencial. La plata y el bronce se funden con la obsidiana y el ónix, creando no solo adornos, sino amuletos de poder. Creemos que la verdadera elegancia no grita, sino que acecha en las sombras, esperando ser descubierta por aquellos que se atreven a mirar más allá del velo.',
+        'about.image_alt': 'Mano del artesano',
+        'cart.empty.title': 'Tu Carrito está Vacío',
+        'cart.empty.message': 'Parece que aún no has añadido nada a tu carrito.',
+        'cart.empty.continue_shopping': 'Seguir Comprando',
+        'cart.title': 'Carrito de Compras',
+        'cart.summary.title': 'Resumen del Pedido',
+        'cart.summary.subtotal': 'Subtotal',
+        'cart.summary.taxes': 'Impuestos ({{rate}}%)',
+        'cart.summary.total': 'Total',
+        'cart.summary.checkout_button': 'Proceder al Pago'
+      },
     },
-  });
+  },
+  lng: localStorage.getItem('aots-lang') || 'es', // Set language from storage or default to 'es'
+  fallbackLng: 'en',
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
 export default i18n;

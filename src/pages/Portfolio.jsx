@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Container,
@@ -12,6 +11,7 @@ import {
 import Image from '../components/Image';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import { useTranslation } from 'react-i18next';
 
 const portfolioImages = [
   { src: '/imagenes/portafolio/página_1.jpg', title: 'Diseño 1', id: 'portfolio-1' },
@@ -49,6 +49,7 @@ const ITEMS_TO_LOAD = 9;
 
 function Portfolio() {
   const theme = useTheme();
+  const { t } = useTranslation();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -90,7 +91,7 @@ function Portfolio() {
           color: '#FFFFFF'
         }}
       >
-        Nuestro Legado
+        {t('portfolio.title')}
       </Typography>
       <ImageList variant="standard" cols={cols} gap={16}>
         {currentImages.map((item, idx) => (
@@ -113,7 +114,7 @@ function Portfolio() {
               },
             }}
           >
-            Cargar Más
+            {t('portfolio.load_more')}
           </Button>
         </Box>
       )}

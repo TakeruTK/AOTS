@@ -1,44 +1,4 @@
 {
-  "header": {
-    "home": "Home",
-    "jewelry": "Jewelry",
-    "portfolio": "Portfolio",
-    "about": "About",
-    "shop": "Shop"
-  },
-  "home": {
-    "title": "OUR DESIGNS"
-  },
-  "product": {
-    "material": "Material",
-    "size": "Size",
-    "finish": "Finish",
-    "addToCart": "Add to Cart",
-    "adding": "Adding..."
-  },
-  "cart": {
-    "title": "Shopping Cart",
-    "total": "Total",
-    "empty": "Empty Cart",
-    "checkout": "Proceed to Checkout",
-    "emptyMessage": "Your cart is empty."
-  },
-  "portfolio": {
-    "title": "Creations Portfolio"
-  },
-  "shop": {
-    "jewelry": "Jewelry",
-    "witchcraft": "Witchcraft",
-    "home": "Home",
-    "customs": "Customs",
-    "tarot": "Tarot",
-    "oils": "Oils"
-  },
-  "jewelry": {
-    "title": "Our Designs"
-  },
-  "about": {
-    "title": "About Us",
-    "text": "Ashes of the Souls is a project born from the need to create unique and meaningful objects, inspired by the darkness and beauty of the arcane. Each piece is forged by hand, with passion and dedication, seeking to capture the essence of a world hidden from the eyes of mortals. Our jewels are not mere accessories, but talismans that whisper ancient stories and connect us with our deepest essence. In our workshop, metal and fire dance to the rhythm of forgotten rituals, giving life to creations that challenge the ephemeral and celebrate the eternal."
-  }
+  "subtitle": "Handcrafted Jewelry for Dark Souls",
+  "featured_products": "OUR DESIGNS"
 }

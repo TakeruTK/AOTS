@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
@@ -20,17 +19,19 @@ import {
 import { ArrowBackIos, ArrowForwardIos, Close } from '@mui/icons-material';
 import { products } from '../data/products';
 import useCartStore from '../store/cartStore';
+import { useTranslation } from 'react-i18next';
 
 function ProductDetail() {
   const { id } = useParams();
-  const { addToCart } = useCartStore(); // Changed from addItem to addToCart
+  const { t } = useTranslation();
+  const { addToCart } = useCartStore();
   const product = products.find(p => p.id === parseInt(id));
 
   // State hooks
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [material, setMaterial] = useState('Plata 925');
+  const [material, setMaterial] = useState('product.material.silver'); // Use translation key
   const [size, setSize] = useState('18mm');
-  const [finish, setFinish] = useState('Pulido');
+  const [finish, setFinish] = useState('product.finish.polished'); // Use translation key
   const [isAdding, setIsAdding] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,12 +43,12 @@ function ProductDetail() {
   }, [id]);
 
   const handleNextImage = (e) => {
-    e.stopPropagation(); // Prevent modal from opening
+    e.stopPropagation();
     setCurrentImageIndex(prevIndex => (prevIndex + 1) % productImages.length);
   };
 
   const handlePrevImage = (e) => {
-    e.stopPropagation(); // Prevent modal from opening
+    e.stopPropagation();
     setCurrentImageIndex(prevIndex => (prevIndex - 1 + productImages.length) % productImages.length);
   };
 
@@ -68,12 +69,12 @@ function ProductDetail() {
       name: product.name,
       price: product.price,
       image: productImages.length > 0 ? productImages[currentImageIndex].src : '',
-      material, 
+      material: t(material), // Translate material
       size, 
-      finish, 
+      finish: t(finish), // Translate finish
     };
     setTimeout(() => {
-      addToCart(cartItem); // Changed from addItem to addToCart
+      addToCart(cartItem);
       setIsAdding(false);
     }, 1000);
   };
@@ -82,10 +83,10 @@ function ProductDetail() {
     return (
       <Container sx={{ py: 5, textAlign: 'center', pt: { xs: 10, md: 12 } }}>
         <Typography variant="h4" component="h1" sx={{ color: '#FFFFFF' }}>
-          Producto no encontrado
+          {t('product.not_found_title')}
         </Typography>
         <Typography sx={{ color: '#CCCCCC', mt: 2 }}>
-          El producto que buscas no existe o ha sido movido.
+          {t('product.not_found_message')}
         </Typography>
       </Container>
     );
@@ -152,7 +153,7 @@ function ProductDetail() {
                 </IconButton>
               </>
             ) : (
-                <Typography sx={{ color: '#555' }}>Sin imagen</Typography>
+                <Typography sx={{ color: '#555' }}>{t('product.no_image')}</Typography>
             )}
           </Box>
         </Grid>
@@ -166,31 +167,31 @@ function ProductDetail() {
             ${product.price.toFixed(2)} USD
           </Typography>
           <Typography variant="body1" paragraph sx={{ color: '#CCCCCC', lineHeight: 1.7, fontFamily: "'Montserrat Light', sans-serif"}}>
-            {product.description}
+            {t(`product.${product.id}.description`)}
           </Typography>
 
           {/* Options */}
           <Box sx={{ width: '100%', maxWidth: 350 }}>
             <FormControl fullWidth sx={{ my: 1.5 }}>
-              <InputLabel id="material-label" sx={{color: '#CCCCCC'}}>Material</InputLabel>
+              <InputLabel id="material-label" sx={{color: '#CCCCCC'}}>{t('product.material')}</InputLabel>
               <Select
                 labelId="material-label"
                 value={material}
-                label="Material"
+                label={t('product.material')}
                 onChange={(e) => setMaterial(e.target.value)}
                 sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
               >
-                <MenuItem value="Plata 925">Plata 925</MenuItem>
-                <MenuItem value="Bronce">Bronce</MenuItem>
+                <MenuItem value="product.material.silver">{t('product.material.silver')}</MenuItem>
+                <MenuItem value="product.material.bronze">{t('product.material.bronze')}</MenuItem>
               </Select>
             </FormControl>
 
             <FormControl fullWidth sx={{ my: 1.5 }}>
-              <InputLabel id="size-label" sx={{color: '#CCCCCC'}}>Talla (Diámetro Interno)</InputLabel>
+              <InputLabel id="size-label" sx={{color: '#CCCCCC'}}>{t('product.size')}</InputLabel>
               <Select
                 labelId="size-label"
                 value={size}
-                label="Talla (Diámetro Interno)"
+                label={t('product.size')}
                 onChange={(e) => setSize(e.target.value)}
                 sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
               >
@@ -201,17 +202,17 @@ function ProductDetail() {
             </FormControl>
 
             <FormControl fullWidth sx={{ my: 1.5 }}>
-              <InputLabel id="finish-label" sx={{color: '#CCCCCC'}}>Acabado</InputLabel>
+              <InputLabel id="finish-label" sx={{color: '#CCCCCC'}}>{t('product.finish')}</InputLabel>
               <Select
                 labelId="finish-label"
                 value={finish}
-                label="Acabado"
+                label={t('product.finish')}
                 onChange={(e) => setFinish(e.target.value)}
                 sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
               >
-                <MenuItem value="Pulido">Pulido (Brillante)</MenuItem>
-                <MenuItem value="Mate">Mate (Sin Brillo)</MenuItem>
-                <MenuItem value="Envejecido">Envejecido (Oscurecido)</MenuItem>
+                <MenuItem value="product.finish.polished">{t('product.finish.polished')}</MenuItem>
+                <MenuItem value="product.finish.matte">{t('product.finish.matte')}</MenuItem>
+                <MenuItem value="product.finish.aged">{t('product.finish.aged')}</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -235,7 +236,7 @@ function ProductDetail() {
               }
             }}
           >
-            {isAdding ? <CircularProgress size={24} sx={{ color: '#000' }} /> : 'Añadir al Carrito'}
+            {isAdding ? <CircularProgress size={24} sx={{ color: '#000' }} /> : t('product.add_to_cart')}
           </Button>
         </Grid>
       </Grid>

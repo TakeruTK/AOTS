@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
@@ -18,9 +17,12 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 // Styled component for a subtle animation on item removal
-const CartItemCard = styled(Card)(({ theme, isRemoving }) => ({
+const CartItemCard = styled(Card, {
+  shouldForwardProp: (prop) => prop !== 'isRemoving',
+})(({ theme, isRemoving }) => ({
   display: 'flex',
   marginBottom: theme.spacing(2),
   backgroundColor: '#2e2e2e',
@@ -31,6 +33,7 @@ const CartItemCard = styled(Card)(({ theme, isRemoving }) => ({
 }));
 
 const Cart = () => {
+  const { t } = useTranslation();
   const {
     items,
     totalPrice,
@@ -62,10 +65,10 @@ const Cart = () => {
     return (
       <Container maxWidth="lg" sx={{ mt: 12, textAlign: 'center', color: '#f5f5f5' }}>
         <Typography variant="h4" gutterBottom sx={{ fontFamily: 'Cinzel, serif' }}>
-          Your Cart is Empty
+          {t('cart.empty.title')}
         </Typography>
         <Typography variant="body1" sx={{ mb: 3 }}>
-          Looks like you haven't added anything to your cart yet.
+          {t('cart.empty.message')}
         </Typography>
         <Button 
           variant="contained" 
@@ -77,7 +80,7 @@ const Cart = () => {
             '&:hover': { backgroundColor: '#a0740a'}
           }}
         >
-          Continue Shopping
+          {t('cart.empty.continue_shopping')}
         </Button>
       </Container>
     );
@@ -86,7 +89,7 @@ const Cart = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 12 }}>
       <Typography variant="h3" gutterBottom sx={{ fontFamily: 'Cinzel, serif', color: '#f5f5f5', textAlign: 'center', mb: 4 }}>
-        Shopping Cart
+        {t('cart.title')}
       </Typography>
       <Grid container spacing={4} justifyContent="center">
         <Grid item xs={12} md={7}>
@@ -139,20 +142,20 @@ const Cart = () => {
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 3, backgroundColor: '#1e1e1e', color: '#f5f5f5' }}>
             <Typography variant="h5" gutterBottom sx={{ fontFamily: 'Cinzel, serif' }}>
-              Order Summary
+              {t('cart.summary.title')}
             </Typography>
             <Divider sx={{ my: 2, borderColor: '#444' }} />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
-              <Typography>Subtotal</Typography>
+              <Typography>{t('cart.summary.subtotal')}</Typography>
               <Typography>${totalPrice.toFixed(2)}</Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
-              <Typography>Taxes ({(taxRate * 100).toFixed(0)}%)</Typography>
+              <Typography>{t('cart.summary.taxes', { rate: (taxRate * 100).toFixed(0) })}</Typography>
               <Typography>${taxes.toFixed(2)}</Typography>
             </Box>
             <Divider sx={{ my: 2, borderColor: '#444' }} />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '1.2rem' }}>
-              <Typography variant="h6" sx={{ fontFamily: 'Cinzel, serif' }}>Total</Typography>
+              <Typography variant="h6" sx={{ fontFamily: 'Cinzel, serif' }}>{t('cart.summary.total')}</Typography>
               <Typography variant="h6">${totalWithTaxes.toFixed(2)}</Typography>
             </Box>
             <Button
@@ -168,7 +171,7 @@ const Cart = () => {
                 '&:hover': { backgroundColor: '#a0740a' },
               }}
             >
-              Proceed to Checkout
+              {t('cart.summary.checkout_button')}
             </Button>
           </Paper>
         </Grid>

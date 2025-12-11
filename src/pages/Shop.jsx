@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Typography, Grid, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const sharedSectionBoxStyle = {
   position: 'relative',
@@ -32,24 +32,26 @@ const overlayStyle = {
 };
 
 const Shop = () => {
+  const { t } = useTranslation(); // Initialize useTranslation
+
   const sections = [
     {
-      title: 'Joyería',
-      description: 'Anillos, collares y pendientes forjados en las llamas del inframundo.',
+      title: t('shop.jewelry.title'), // Translate title
+      description: t('shop.jewelry.description'), // Translate description
       link: '/jewelry',
       imageUrl: 'https://images.unsplash.com/photo-1600172454294-8c679a4c8a2b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       enabled: true,
     },
     {
-      title: 'Ropa',
-      description: 'Viste la oscuridad. Próximamente, camisetas, sudaderas y más.',
+      title: t('shop.clothing.title'),
+      description: t('shop.clothing.description'),
       link: '#',
       imageUrl: 'https://images.unsplash.com/photo-1512327428435-a7c55d6d1b17?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       enabled: false,
     },
     {
-      title: 'Artefactos',
-      description: 'Decora tu guarida con arte y objetos malditos.',
+      title: t('shop.artifacts.title'),
+      description: t('shop.artifacts.description'),
       link: '#',
       imageUrl: 'https://images.unsplash.com/photo-1563178229-37f95f206a30?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       enabled: false,
@@ -74,7 +76,7 @@ const Shop = () => {
           color: '#FFFFFF'
         }}
       >
-        Tienda
+        {t('shop.title')} 
       </Typography>
 
       {/* Main Section */}
@@ -184,7 +186,7 @@ const Shop = () => {
                 </Typography>
                 {!section.enabled && (
                   <Typography sx={{fontFamily: "'Montserrat Light', 'Lato Light', sans-serif", color: '#B8860B', marginTop: '1rem', letterSpacing: '0.1em'}}>
-                      (Próximamente)
+                      {t('shop.coming_soon')}
                   </Typography>
               )}
               </Box>
