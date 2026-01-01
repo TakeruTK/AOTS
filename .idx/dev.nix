@@ -7,6 +7,8 @@
   packages = [
     pkgs.nodejs_22
     pkgs.git-lfs
+    pkgs.docker
+    pkgs.docker-compose
   ];
   # Sets environment variables in the workspace
   env = {};
@@ -24,16 +26,11 @@
         default.openFiles = [ "src/App.tsx" "src/App.ts" "src/App.jsx" "src/App.js" ];
       };
       # To run something each time the workspace is (re)started, use the `onStart` hook
+      onStart = {};
     };
     # Enable previews and customize configuration
     previews = {
       enable = true;
-      previews = {
-        web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--host" "0.0.0.0"];
-          manager = "web";
-        };
-      };
     };
   };
 }
