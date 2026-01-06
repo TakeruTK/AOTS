@@ -113,7 +113,8 @@ app.post('/api/stripe/checkout-session', async (req, res) => {
 });
 
 // The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
-app.get('*', (req, res) => {
+// Catch-all handler: send React's index.html for any unmatched route
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
