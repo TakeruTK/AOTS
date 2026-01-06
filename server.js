@@ -4,13 +4,22 @@ import Stripe from 'stripe';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 dotenv.config();
 
 const app = express();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the React app build directory
+app.use(express.static(path.join(__dirname, 'dist')));
+
 
 const mercadoPagoAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
 if (!mercadoPagoAccessToken) {
@@ -50,12 +59,16 @@ app.post('/api/mercadopago/preference', async (req, res) => {
     back_urls: {
       success: `${FRONTEND_URL}/payment-success`,
       failure: `${FRONTEND_URL}/payment-failed`,
-      pending: `${FRONTEND_URL}/payment-pending`,
+      pending: `${FRONTEND_URL}/payment-pending`
     },
-    auto_return: 'approved',
   };
 
+  if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/.test(FRONTEND_URL)) {
+    preference.auto_return = 'approved';
+  }
+  
   try {
+    console.log('DEBUG: Mercado Pago preference body ->', JSON.stringify(preference));
     const response = await new Preference(client).create({ body: preference });
     res.json({ preferenceId: response.id });
   } catch (error) {
@@ -98,6 +111,12 @@ app.post('/api/stripe/checkout-session', async (req, res) => {
     res.status(500).json({ error: 'No se pudo crear la sesión de pago.' });
   }
 });
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 
 const PORT = process.env.PORT || 4242;
 app.listen(PORT, () => {

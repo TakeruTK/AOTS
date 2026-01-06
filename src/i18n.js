@@ -37,6 +37,7 @@ i18n.use(initReactI18next).init({
         'product.4.description': 'Roots of the painful miracle, a skull ring by A.O.T.S.',
         'portfolio.title': 'Our Legacy',
         'portfolio.load_more': 'Load More',
+        'portfolio.design': 'Design',
         'about.title': 'Our Story',
         'about.p1': 'In the heart of darkness, where beauty and mystery converge, Ashes of the Souls was born. We are not mere jewelers; we are artisans of the arcane, forgers of symbols that whisper forgotten stories. Each piece we create is a pact with the shadow and the light, a testament to the duality that resides in the human soul.',
         'about.p2': 'Our materials are extracted from the bowels of the earth and treated with reverential respect. Silver and bronze are fused with obsidian and onyx, creating not just ornaments, but amulets of power. We believe that true elegance does not shout, but lurks in the shadows, waiting to be discovered by those who dare to look beyond the veil.',
@@ -49,7 +50,10 @@ i18n.use(initReactI18next).init({
         'cart.summary.subtotal': 'Subtotal',
         'cart.summary.taxes': 'Taxes ({{rate}}%)',
         'cart.summary.total': 'Total',
-        'cart.summary.checkout_button': 'Proceed to Checkout'
+        'cart.summary.checkout_button': 'Proceed to Checkout',
+        'checkout.title': 'Finalize Purchase',
+        'checkout.mp_error': 'Could not initialize Mercado Pago checkout.',
+        'checkout.mp_init_error': 'Could not initialize payment with Mercado Pago.'
       },
     },
     es: {
@@ -86,6 +90,7 @@ i18n.use(initReactI18next).init({
         'product.4.description': 'Raíces de un milagro doloroso, un anillo de calavera de A.O.T.S.',
         'portfolio.title': 'Nuestro Legado',
         'portfolio.load_more': 'Cargar Más',
+        'portfolio.design': 'Diseño',
         'about.title': 'Nuestra Historia',
         'about.p1': 'En el corazón de la oscuridad, donde la belleza y el misterio convergen, nació Ashes of the Souls. No somos meros joyeros; somos artesanos de lo arcano, forjadores de símbolos que susurran historias olvidadas. Cada pieza que creamos es un pacto con la sombra y la luz, un testamento a la dualidad que reside en el alma humana.',
         'about.p2': 'Nuestros materiales son extraídos de las entrañas de la tierra y tratados con un respeto reverencial. La plata y el bronce se funden con la obsidiana y el ónix, creando no solo adornos, sino amuletos de poder. Creemos que la verdadera elegancia no grita, sino que acecha en las sombras, esperando ser descubierta por aquellos que se atreven a mirar más allá del velo.',
@@ -98,7 +103,10 @@ i18n.use(initReactI18next).init({
         'cart.summary.subtotal': 'Subtotal',
         'cart.summary.taxes': 'Impuestos ({{rate}}%)',
         'cart.summary.total': 'Total',
-        'cart.summary.checkout_button': 'Proceder al Pago'
+        'cart.summary.checkout_button': 'Proceder al Pago',
+        'checkout.title': 'Finalizar Compra',
+        'checkout.mp_error': 'No se pudo cargar el checkout de Mercado Pago.',
+        'checkout.mp_init_error': 'No se pudo inicializar el pago con Mercado Pago.'
       },
     },
   },

@@ -3,8 +3,16 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
-      - "4242:4242"
+      - target: 5173
+        published: 5173
+        protocol: tcp
+        mode: host
+      - target: 4242
+        published: 4242
+        protocol: tcp
+        mode: host
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    env_file:
+      - .env

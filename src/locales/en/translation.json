@@ -1,4 +1,9 @@
 {
   "subtitle": "Handcrafted Jewelry for Dark Souls",
-  "featured_products": "OUR DESIGNS"
+  "featured_products": "OUR DESIGNS",
+  "portfolio": {
+    "title": "Our Legacy",
+    "load_more": "Load More",
+    "design": "Design"
+  }
 }

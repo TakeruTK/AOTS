@@ -1,4 +1,9 @@
 {
   "subtitle": "Joyería Artesanal para Almas Oscuras",
-  "featured_products": "NUESTROS DISEÑOS"
+  "featured_products": "NUESTROS DISEÑOS",
+  "portfolio": {
+    "title": "Nuestro Legado",
+    "load_more": "Cargar Más",
+    "design": "Diseño"
+  }
 }

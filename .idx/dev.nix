@@ -11,7 +11,14 @@
     pkgs.docker-compose
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = {
+    VITE_FRONTEND_URL="http://localhost:5173";
+    VITE_STRIPE_PUBLISHABLE_KEY="pk_test_...";
+    STRIPE_SECRET_KEY="sk_test_...";
+    VITE_MERCADOPAGO_PUBLIC_KEY="TEST-a445eb7c-69bb-485b-92cb-a822836cb38c";
+    MERCADOPAGO_ACCESS_TOKEN="TEST-843240138881586-121900-c7c3fe2c2bef2144e609c6186b532c7b-458341662";
+    PORT="4242";
+  };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [

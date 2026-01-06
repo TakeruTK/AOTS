@@ -1,14 +1,13 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
-import Checkout from './pages/Checkout'; // Import Checkout
-import PaymentSuccess from './pages/PaymentSuccess'; // Import PaymentSuccess
-import PaymentFailed from './pages/PaymentFailed'; // Import PaymentFailed
+import Checkout from './pages/Checkout';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentFailed from './pages/PaymentFailed';
 import Header from './components/Header';
 import Shop from './pages/Shop';
 import Jewelry from './pages/Jewelry';
@@ -16,10 +15,8 @@ import About from './pages/About';
 import './App.css';
 
 function App() {
-  const { t } = useTranslation();
-
   return (
-    <>
+    <Suspense fallback="loading...">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -33,7 +30,7 @@ function App() {
         <Route path="/jewelry" element={<Jewelry />} />
         <Route path="/about" element={<About />} />
       </Routes>
-    </>
+    </Suspense>
   );
 }
 
