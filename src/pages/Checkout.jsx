@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Box, Container, Divider, Paper, Typography } from '@mui/material';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { Alert, Box, Button, Container, Divider, Paper, Typography } from '@mui/material';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useTranslation } from 'react-i18next';
 import useCartStore from '../store/cartStore';
@@ -9,16 +8,14 @@ import Seo from '../components/Seo';
 
 const mercadoPagoPublicKey = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY;
 const isMercadoPagoConfigured = mercadoPagoPublicKey && !mercadoPagoPublicKey.startsWith('YOUR_');
-if (isMercadoPagoConfigured) {
-  initMercadoPago(mercadoPagoPublicKey, { locale: 'es-CL' });
-}
+const isMercadoPagoTest = mercadoPagoPublicKey?.startsWith('TEST-');
 
 const Checkout = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { items, totalPrice } = useCartStore();
   const [error, setError] = useState(null);
-  const [mercadoPagoPreferenceId, setMercadoPagoPreferenceId] = useState(null);
+  const [mercadoPagoCheckoutUrl, setMercadoPagoCheckoutUrl] = useState(null);
   const [mercadoPagoLoading, setMercadoPagoLoading] = useState(false);
   const [mercadoPagoError, setMercadoPagoError] = useState(null);
 
@@ -46,6 +43,7 @@ const Checkout = () => {
 
       setMercadoPagoLoading(true);
       setMercadoPagoError(null);
+      setMercadoPagoCheckoutUrl(null);
 
       try {
         const response = await fetch('http://localhost:4242/api/mercadopago/preference', {
@@ -55,11 +53,15 @@ const Checkout = () => {
         });
         const data = await response.json();
 
-        if (!response.ok || !data.preferenceId) {
+        const checkoutUrl = isMercadoPagoTest
+          ? data.sandboxInitPoint || data.initPoint
+          : data.initPoint || data.sandboxInitPoint;
+
+        if (!response.ok || !checkoutUrl) {
           throw new Error(data.error || t('checkout.mercadopago_init_error', 'No se pudo iniciar Mercado Pago.'));
         }
 
-        setMercadoPagoPreferenceId(data.preferenceId);
+        setMercadoPagoCheckoutUrl(checkoutUrl);
       } catch (err) {
         console.error('Error al crear preferencia de Mercado Pago:', err);
         setMercadoPagoError(err.message || t('checkout.mercadopago_init_error', 'No se pudo iniciar Mercado Pago.'));
@@ -163,9 +165,27 @@ const Checkout = () => {
             {mercadoPagoError && <Alert severity="error">{mercadoPagoError}</Alert>}
             {mercadoPagoLoading && <Typography sx={{ color: '#bbb' }}>{t('checkout.loading_payment', 'Loading payment...')}</Typography>}
 
-            {!mercadoPagoLoading && mercadoPagoPreferenceId && (
+            {!mercadoPagoLoading && mercadoPagoCheckoutUrl && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Wallet initialization={{ preferenceId: mercadoPagoPreferenceId }} />
+                <Button
+                  component="a"
+                  href={mercadoPagoCheckoutUrl}
+                  variant="contained"
+                  sx={{
+                    width: { xs: '100%', sm: 280 },
+                    py: 1.4,
+                    backgroundColor: '#ffe600',
+                    color: '#063a80',
+                    fontWeight: 800,
+                    fontSize: '1rem',
+                    textTransform: 'none',
+                    '&:hover': {
+                      backgroundColor: '#fff159',
+                    },
+                  }}
+                >
+                  {t('checkout.pay_with_mercadopago', 'Pagar con Mercado Pago')}
+                </Button>
               </Box>
             )}
           </Paper>
