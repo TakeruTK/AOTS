@@ -18,6 +18,7 @@ const Checkout = () => {
   const [mercadoPagoCheckoutUrl, setMercadoPagoCheckoutUrl] = useState(null);
   const [mercadoPagoLoading, setMercadoPagoLoading] = useState(false);
   const [mercadoPagoError, setMercadoPagoError] = useState(null);
+  const [paypalRenderKey, setPaypalRenderKey] = useState(0);
 
   const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID || 'sb';
   const paypalCurrency = import.meta.env.VITE_PAYPAL_CURRENCY || 'USD';
@@ -34,6 +35,20 @@ const Checkout = () => {
     currency: 'CLP',
     maximumFractionDigits: 0,
   }).format(Math.max(Math.round(Number(totalPrice || 0) * mercadoPagoClpRate), 0));
+
+  useEffect(() => {
+    const remountPaypalButtons = () => {
+      setPaypalRenderKey((key) => key + 1);
+    };
+
+    window.addEventListener('pageshow', remountPaypalButtons);
+    window.addEventListener('focus', remountPaypalButtons);
+
+    return () => {
+      window.removeEventListener('pageshow', remountPaypalButtons);
+      window.removeEventListener('focus', remountPaypalButtons);
+    };
+  }, []);
 
   useEffect(() => {
     const createMercadoPagoPreference = async () => {
@@ -128,9 +143,11 @@ const Checkout = () => {
             <Typography variant="body2" sx={{ mb: 2, color: '#bbb' }}>
               {t('checkout.paypal_description', 'Recommended for international payments.')}
             </Typography>
-            <PayPalScriptProvider options={paypalOptions}>
+            <PayPalScriptProvider key={`paypal-provider-${paypalRenderKey}`} options={paypalOptions}>
               <PayPalButtons
+                key={`paypal-buttons-${paypalRenderKey}`}
                 style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' }}
+                forceReRender={[orderAmount, paypalCurrency, paypalRenderKey]}
                 createOrder={createOrder}
                 onApprove={handleApprove}
                 onCancel={() => navigate('/payment-failed')}
