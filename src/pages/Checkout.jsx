@@ -9,20 +9,23 @@ import Seo from '../components/Seo';
 const mercadoPagoPublicKey = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY;
 const isMercadoPagoConfigured = mercadoPagoPublicKey && !mercadoPagoPublicKey.startsWith('YOUR_');
 const isMercadoPagoTest = mercadoPagoPublicKey?.startsWith('TEST-');
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4242' : '');
 
 const Checkout = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { items, totalPrice } = useCartStore();
+  const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID || 'sb';
+  const paypalCurrency = import.meta.env.VITE_PAYPAL_CURRENCY || 'USD';
+  const mercadoPagoClpRate = Number(import.meta.env.VITE_MERCADOPAGO_CLP_RATE || 950);
   const [error, setError] = useState(null);
   const [mercadoPagoCheckoutUrl, setMercadoPagoCheckoutUrl] = useState(null);
   const [mercadoPagoLoading, setMercadoPagoLoading] = useState(false);
   const [mercadoPagoError, setMercadoPagoError] = useState(null);
+  const [paypalConfig, setPaypalConfig] = useState({ configured: false, clientId: null, currency: paypalCurrency });
+  const [paypalLoading, setPaypalLoading] = useState(true);
   const [paypalRenderKey, setPaypalRenderKey] = useState(0);
 
-  const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID || 'sb';
-  const paypalCurrency = import.meta.env.VITE_PAYPAL_CURRENCY || 'USD';
-  const mercadoPagoClpRate = Number(import.meta.env.VITE_MERCADOPAGO_CLP_RATE || 950);
   const paypalOptions = useMemo(() => ({
     clientId: paypalClientId,
     currency: paypalCurrency,
@@ -35,6 +38,23 @@ const Checkout = () => {
     currency: 'CLP',
     maximumFractionDigits: 0,
   }).format(Math.max(Math.round(Number(totalPrice || 0) * mercadoPagoClpRate), 0));
+
+  useEffect(() => {
+    const loadPayPalConfig = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/paypal/config`);
+        const config = await response.json();
+        setPaypalConfig(config);
+      } catch (err) {
+        console.error('Error al cargar configuracion de PayPal:', err);
+        setPaypalConfig({ configured: false, clientId: null, currency: paypalCurrency });
+      } finally {
+        setPaypalLoading(false);
+      }
+    };
+
+    loadPayPalConfig();
+  }, [paypalCurrency]);
 
   useEffect(() => {
     const remountPaypalButtons = () => {
@@ -61,7 +81,7 @@ const Checkout = () => {
       setMercadoPagoCheckoutUrl(null);
 
       try {
-        const response = await fetch('http://localhost:4242/api/mercadopago/preference', {
+        const response = await fetch(`${API_BASE_URL}/api/mercadopago/preference`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items }),
@@ -88,25 +108,40 @@ const Checkout = () => {
     createMercadoPagoPreference();
   }, [items, t]);
 
-  const createOrder = (_data, actions) => {
+  const createOrder = () => {
     setError(null);
 
-    return actions.order.create({
-      purchase_units: [
-        {
-          description: 'Ashes of the Souls order',
-          amount: {
-            currency_code: paypalCurrency,
-            value: orderAmount,
-          },
-        },
-      ],
-    });
+    return fetch(`${API_BASE_URL}/api/paypal/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    })
+      .then((response) => response.json().then((data) => {
+        if (!response.ok || !data.id) {
+          throw new Error(data.error || t('checkout.paypal_init_error', 'Error al iniciar el pago con PayPal.'));
+        }
+
+        return data.id;
+      }))
+      .catch((err) => {
+        console.error('Error al crear orden de PayPal:', err);
+        setError(err.message || t('checkout.paypal_init_error', 'Error al iniciar el pago con PayPal.'));
+        return Promise.reject(err);
+      });
   };
 
-  const handleApprove = async (_data, actions) => {
+  const handleApprove = async (data) => {
     try {
-      const details = await actions.order.capture();
+      const response = await fetch(`${API_BASE_URL}/api/paypal/orders/${data.orderID}/capture`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const details = await response.json();
+
+      if (!response.ok || details.status !== 'COMPLETED') {
+        throw new Error(details.error || t('checkout.paypal_capture_error', 'No se pudo confirmar el pago con PayPal.'));
+      }
+
       navigate(`/payment-success?paypal_order_id=${details.id}`);
     } catch (err) {
       console.error('Error al capturar el pago de PayPal:', err);
@@ -143,11 +178,27 @@ const Checkout = () => {
             <Typography variant="body2" sx={{ mb: 2, color: '#bbb' }}>
               {t('checkout.paypal_description', 'Recommended for international payments.')}
             </Typography>
-            <PayPalScriptProvider key={`paypal-provider-${paypalRenderKey}`} options={paypalOptions}>
+            {paypalLoading && (
+              <Typography sx={{ color: '#bbb' }}>{t('checkout.loading_payment', 'Cargando pago...')}</Typography>
+            )}
+            {!paypalLoading && !paypalConfig.configured && (
+              <Alert severity="warning">
+                {t('checkout.paypal_missing_key', 'PayPal necesita PAYPAL_CLIENT_ID y PAYPAL_CLIENT_SECRET en .env.')}
+              </Alert>
+            )}
+            {!paypalLoading && paypalConfig.configured && (
+            <PayPalScriptProvider
+              key={`paypal-provider-${paypalRenderKey}`}
+              options={{
+                ...paypalOptions,
+                clientId: paypalConfig.clientId,
+                currency: paypalConfig.currency,
+              }}
+            >
               <PayPalButtons
                 key={`paypal-buttons-${paypalRenderKey}`}
                 style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' }}
-                forceReRender={[orderAmount, paypalCurrency, paypalRenderKey]}
+                forceReRender={[orderAmount, paypalConfig.currency, paypalRenderKey]}
                 createOrder={createOrder}
                 onApprove={handleApprove}
                 onCancel={() => navigate('/payment-failed')}
@@ -157,6 +208,7 @@ const Checkout = () => {
                 }}
               />
             </PayPalScriptProvider>
+            )}
           </Paper>
 
           <Divider sx={{ my: 3, borderColor: '#333' }}>
