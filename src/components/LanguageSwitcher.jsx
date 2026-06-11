@@ -30,6 +30,9 @@ const LanguageSwitcher = () => {
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
     localStorage.setItem('aots-lang', lang); // Persist language
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', lang);
+    window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
     setCurrentLang(lang);
     handleClose();
   };

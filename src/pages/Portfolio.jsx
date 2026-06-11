@@ -12,6 +12,7 @@ import Image from '../components/Image';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useTranslation } from 'react-i18next';
+import Seo from '../components/Seo';
 
 const INITIAL_VISIBLE_ITEMS = 9;
 const ITEMS_TO_LOAD = 9;
@@ -53,7 +54,21 @@ function Portfolio() {
   };
 
   return (
-    <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4 }}>
+    <Container sx={{ pt: { xs: 10, md: 15 }, pb: 4, overflow: 'hidden' }}>
+      <Seo
+        title={t('seo.portfolio.title')}
+        description={t('seo.portfolio.description')}
+        keywords={[
+          'custom gothic jewelry',
+          'gothic jewelry portfolio',
+          'custom skull rings',
+          'handmade jewelry designs',
+          'silver jewelry portfolio',
+          'portafolio joyería gótica',
+          'joyería personalizada',
+        ]}
+        image="/imagenes/portafolio/página_1.jpg"
+      />
       <Typography
         variant="h2"
         component="h1"
@@ -62,8 +77,9 @@ function Portfolio() {
         sx={{
           fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
           textTransform: 'uppercase',
-          letterSpacing: '0.2em',
-          marginBottom: '3rem',
+          letterSpacing: { xs: '0.1em', sm: '0.16em', md: '0.2em' },
+          fontSize: { xs: '1.65rem', sm: '2rem' },
+          marginBottom: { xs: '2rem', md: '3rem' },
           color: '#FFFFFF'
         }}
       >

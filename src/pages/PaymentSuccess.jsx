@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
 import { Container, Typography, Button, Box, Paper } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import Seo from '../components/Seo';
 
 const PaymentSuccess = () => {
   const clearCart = useCartStore((state) => state.clearCart);
@@ -11,15 +12,16 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     // Clear the cart only when this component mounts
-    // and a session_id is present, confirming a successful payment redirection.
+    // and a payment provider id is present, confirming a successful payment redirection.
     const queryParams = new URLSearchParams(location.search);
-    if (queryParams.get('session_id')) {
+    if (queryParams.get('session_id') || queryParams.get('paypal_order_id') || queryParams.get('preference_id') || queryParams.get('collection_id')) {
       clearCart();
     }
   }, [clearCart, location.search]);
 
   return (
     <Container maxWidth="md" sx={{ mt: 15, textAlign: 'center' }}>
+      <Seo title="Payment Successful" description="Your Ashes of the Souls order was received successfully." noindex />
       <Paper sx={{ p: 5, backgroundColor: '#1e1e1e', color: '#f5f5f5', borderRadius: 2 }}>
         <CheckCircleOutlineIcon sx={{ fontSize: 60, color: '#4CAF50' }} />
         <Typography variant="h3" gutterBottom sx={{ fontFamily: 'Cinzel, serif', mt: 2 }}>

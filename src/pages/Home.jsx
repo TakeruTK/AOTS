@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import { Typography, Box } from '@mui/material';
 import { products } from '../data/products'; // Import real product data
 import { useTranslation } from 'react-i18next';
+import Seo from '../components/Seo';
 
 const Home = () => {
     const { t } = useTranslation();
@@ -18,7 +19,36 @@ const Home = () => {
     const featuredProducts = products.slice(0, 4);
 
     return (
-        <Box sx={{ padding: { xs: '1rem', md: '2rem' }, width: '100%' }}>
+        <Box sx={{ px: { xs: 2, sm: 3, md: 4 }, py: { xs: 2, md: 4 }, width: '100%', overflow: 'hidden' }}>
+            <Seo
+                title={t('seo.home.title')}
+                description={t('seo.home.description')}
+                keywords={[
+                    'gothic jewelry',
+                    'handmade gothic jewelry',
+                    'skull rings',
+                    'silver skull ring',
+                    'dark jewelry',
+                    'occult jewelry',
+                    'artisan rings',
+                    'international jewelry shipping',
+                    'joyería gótica',
+                    'anillos de calavera',
+                    'joyería artesanal',
+                ]}
+                jsonLd={{
+                    '@context': 'https://schema.org',
+                    '@type': 'JewelryStore',
+                    name: 'Ashes of the Souls',
+                    description: t('seo.home.description'),
+                    url: import.meta.env.VITE_SITE_URL || window.location.origin,
+                    areaServed: 'Worldwide',
+                    currenciesAccepted: 'USD',
+                    paymentAccepted: 'PayPal',
+                    priceRange: '$$',
+                    image: `${import.meta.env.VITE_SITE_URL || window.location.origin}/imagenes/productos/Decay-Skull-A.O.T.S/IMG_20230912_150851_012.jpg`,
+                }}
+            />
             {/* ... Hero Section ... */}
             <Box
                 sx={{
@@ -32,8 +62,9 @@ const Home = () => {
                     backgroundPosition: 'center',
                     color: 'white',
                     textAlign: 'center',
-                    marginBottom: '4rem',
-                    padding: '2rem'
+                    marginBottom: { xs: '2.5rem', md: '4rem' },
+                    px: { xs: 2, sm: 3 },
+                    py: { xs: 5, md: 6 }
                 }}
             >
                 <Typography
@@ -43,8 +74,8 @@ const Home = () => {
                     sx={{
                         fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
                         textTransform: 'uppercase',
-                        letterSpacing: '0.35em',
-                        fontSize: { xs: '2rem', md: '3rem' },
+                        letterSpacing: { xs: '0.12em', sm: '0.22em', md: '0.35em' },
+                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
                         color: '#FFFFFF'
                     }}
                 >
@@ -71,8 +102,9 @@ const Home = () => {
                 sx={{
                     fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
                     textTransform: 'uppercase',
-                    letterSpacing: '0.2em',
-                    marginBottom: '3rem',
+                    letterSpacing: { xs: '0.1em', sm: '0.16em', md: '0.2em' },
+                    fontSize: { xs: '1.45rem', sm: '1.75rem', md: '2rem' },
+                    marginBottom: { xs: '2rem', md: '3rem' },
                     color: '#FFFFFF'
                 }}
             >

@@ -3,10 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Typography, Button, Box, Paper } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import Seo from '../components/Seo';
 
 const PaymentFailed = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 15, textAlign: 'center' }}>
+      <Seo title="Payment Failed" description="Your Ashes of the Souls payment could not be completed." noindex />
       <Paper sx={{ p: 5, backgroundColor: '#1e1e1e', color: '#f5f5f5', borderRadius: 2 }}>
         <ErrorOutlineIcon sx={{ fontSize: 60, color: '#f44336' }} />
         <Typography variant="h3" gutterBottom sx={{ fontFamily: 'Cinzel, serif', mt: 2 }}>

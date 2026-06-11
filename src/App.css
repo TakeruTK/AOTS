@@ -8,17 +8,36 @@ body {
     padding-top: 64px; /* Add padding to body to prevent content from being hidden by the fixed navbar */
 }
 
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+img,
+video,
+canvas {
+    max-width: 100%;
+}
+
 /* Product Grid Styles */
 .product-grid {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 2rem;
-    padding: 1rem;
+    width: min(100%, 1440px);
+    margin: 0 auto;
+    padding: 1rem 0;
 }
 
 .product-grid-item {
-    flex: 0 1 320px; /* Set the base width */
+    min-width: 0;
     display: flex;
     flex-direction: column;
 }
@@ -35,6 +54,7 @@ body {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 0;
+    min-width: 0;
 }
 
 .product-card:hover {
@@ -45,7 +65,8 @@ body {
 .product-image-container {
     position: relative; /* This is crucial for positioning the add-to-cart button */
     width: 100%;
-    height: 320px; /* Explicitly set height to match width for a square look */
+    aspect-ratio: 1 / 1;
+    height: auto;
     overflow: hidden;
 }
 
@@ -69,7 +90,7 @@ body {
 
 
 .product-info {
-    padding: 1.5rem 1rem;
+    padding: clamp(1rem, 3vw, 1.5rem) 1rem;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -91,6 +112,7 @@ body {
     letter-spacing: 0.2em;
     font-size: 1.3rem;
     margin: 0 0 0.5rem 0;
+    overflow-wrap: anywhere;
 }
 
 .product-description {
@@ -155,4 +177,42 @@ body {
   filter: grayscale(80%) brightness(0.8) contrast(1.1);
   border: 1px solid #282828;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+@media (hover: none), (pointer: coarse) {
+    .product-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .product-card .add-to-cart-btn {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding-top: 56px;
+    }
+
+    .product-grid {
+        gap: 1.25rem;
+    }
+
+    .product-name {
+        font-size: 1.05rem;
+        letter-spacing: 0.12em;
+    }
+
+    .product-price {
+        font-size: 1.05rem;
+    }
+
+    .about-parallax-bg {
+        background-attachment: scroll;
+    }
+
+    .about-text-box {
+        padding: 1.25rem;
+    }
 }

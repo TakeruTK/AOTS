@@ -1,6 +1,15 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+const supportedLanguages = ['en', 'es'];
+const urlLanguage = new URLSearchParams(window.location.search).get('lang');
+const savedLanguage = localStorage.getItem('aots-lang');
+const initialLanguage = supportedLanguages.includes(urlLanguage)
+  ? urlLanguage
+  : supportedLanguages.includes(savedLanguage)
+    ? savedLanguage
+    : 'es';
+
 i18n.use(initReactI18next).init({
   resources: {
     en: {
@@ -52,8 +61,32 @@ i18n.use(initReactI18next).init({
         'cart.summary.total': 'Total',
         'cart.summary.checkout_button': 'Proceed to Checkout',
         'checkout.title': 'Finalize Purchase',
-        'checkout.mp_error': 'Could not initialize Mercado Pago checkout.',
-        'checkout.mp_init_error': 'Could not initialize payment with Mercado Pago.'
+        'checkout.paypal_capture_error': 'Could not confirm the PayPal payment.',
+        'checkout.paypal_init_error': 'Could not initialize PayPal checkout.',
+        'checkout.paypal_description': 'Recommended for international payments.',
+        'checkout.or_pay_with': 'or pay with',
+        'checkout.mercadopago_description': 'For customers paying from Chile. Approximate total: {{amount}}.',
+        'checkout.mercadopago_missing_key': 'Mercado Pago needs VITE_MERCADOPAGO_PUBLIC_KEY and MERCADOPAGO_ACCESS_TOKEN in .env.',
+        'checkout.mercadopago_init_error': 'Could not initialize Mercado Pago.',
+        'checkout.loading_payment': 'Loading payment...',
+        'seo.home.title': 'Handmade Gothic Jewelry Worldwide',
+        'seo.home.description': 'Shop handmade gothic jewelry, skull rings, dark silver pieces, custom occult accessories, and artisan designs shipped internationally by Ashes of the Souls.',
+        'seo.shop.title': 'Shop Handmade Gothic Jewelry',
+        'seo.shop.description': 'Browse artisan gothic jewelry, skull rings, silver rings, bronze pieces, pendants, and dark accessories available for international buyers.',
+        'seo.jewelry.title': 'Gothic Rings and Handmade Jewelry',
+        'seo.jewelry.description': 'Discover handmade gothic rings, skull rings, silver jewelry, bronze jewelry, occult accessories, and dark artisan pieces crafted by Ashes of the Souls.',
+        'seo.portfolio.title': 'Custom Gothic Jewelry Portfolio',
+        'seo.portfolio.description': 'Explore the Ashes of the Souls portfolio of custom gothic jewelry, skull rings, handmade silver pieces, and dark artisan designs.',
+        'seo.about.title': 'About Ashes of the Souls',
+        'seo.about.description': 'Ashes of the Souls creates handmade gothic jewelry, dark silver rings, bronze pieces, and occult-inspired designs for collectors around the world.',
+        'seo.cart.title': 'Shopping Cart',
+        'seo.cart.description': 'Review your Ashes of the Souls cart and prepare your handmade gothic jewelry order for international checkout.',
+        'seo.checkout.title': 'Secure PayPal Checkout',
+        'seo.checkout.description': 'Complete your international Ashes of the Souls order with PayPal for handmade gothic jewelry and artisan skull rings.',
+        'seo.payment_success.title': 'Payment Successful',
+        'seo.payment_success.description': 'Your Ashes of the Souls order was received successfully.',
+        'seo.payment_failed.title': 'Payment Failed',
+        'seo.payment_failed.description': 'Your Ashes of the Souls payment could not be completed. Return to your cart and try again.'
       },
     },
     es: {
@@ -105,12 +138,36 @@ i18n.use(initReactI18next).init({
         'cart.summary.total': 'Total',
         'cart.summary.checkout_button': 'Proceder al Pago',
         'checkout.title': 'Finalizar Compra',
-        'checkout.mp_error': 'No se pudo cargar el checkout de Mercado Pago.',
-        'checkout.mp_init_error': 'No se pudo inicializar el pago con Mercado Pago.'
+        'checkout.paypal_capture_error': 'No se pudo confirmar el pago con PayPal.',
+        'checkout.paypal_init_error': 'No se pudo iniciar el pago con PayPal.',
+        'checkout.paypal_description': 'Recomendado para pagos internacionales.',
+        'checkout.or_pay_with': 'o paga con',
+        'checkout.mercadopago_description': 'Para clientes que pagan desde Chile. Total aproximado: {{amount}}.',
+        'checkout.mercadopago_missing_key': 'Mercado Pago necesita VITE_MERCADOPAGO_PUBLIC_KEY y MERCADOPAGO_ACCESS_TOKEN en .env.',
+        'checkout.mercadopago_init_error': 'No se pudo iniciar Mercado Pago.',
+        'checkout.loading_payment': 'Cargando pago...',
+        'seo.home.title': 'Joyería Gótica Artesanal con Envíos Internacionales',
+        'seo.home.description': 'Compra joyería gótica artesanal, anillos de calavera, piezas de plata oscuras, accesorios ocultistas y diseños hechos a mano con venta internacional.',
+        'seo.shop.title': 'Tienda de Joyería Gótica Artesanal',
+        'seo.shop.description': 'Explora joyería gótica artesanal, anillos de calavera, anillos de plata, piezas de bronce, colgantes y accesorios oscuros para compradores internacionales.',
+        'seo.jewelry.title': 'Anillos Góticos y Joyería Hecha a Mano',
+        'seo.jewelry.description': 'Descubre anillos góticos hechos a mano, anillos de calavera, joyería de plata, piezas de bronce, accesorios ocultistas y diseños artesanales oscuros.',
+        'seo.portfolio.title': 'Portafolio de Joyería Gótica Personalizada',
+        'seo.portfolio.description': 'Explora el portafolio de Ashes of the Souls con joyería gótica personalizada, anillos de calavera, piezas de plata y diseños oscuros artesanales.',
+        'seo.about.title': 'Sobre Ashes of the Souls',
+        'seo.about.description': 'Ashes of the Souls crea joyería gótica artesanal, anillos oscuros de plata, piezas de bronce y diseños inspirados en lo oculto para coleccionistas de todo el mundo.',
+        'seo.cart.title': 'Carrito de Compras',
+        'seo.cart.description': 'Revisa tu carrito de Ashes of the Souls y prepara tu pedido internacional de joyería gótica artesanal.',
+        'seo.checkout.title': 'Pago Seguro con PayPal',
+        'seo.checkout.description': 'Completa tu pedido internacional de Ashes of the Souls con PayPal para joyería gótica artesanal y anillos de calavera.',
+        'seo.payment_success.title': 'Pago Exitoso',
+        'seo.payment_success.description': 'Tu pedido de Ashes of the Souls fue recibido correctamente.',
+        'seo.payment_failed.title': 'Pago Fallido',
+        'seo.payment_failed.description': 'No se pudo completar tu pago de Ashes of the Souls. Vuelve al carrito e inténtalo nuevamente.'
       },
     },
   },
-  lng: localStorage.getItem('aots-lang') || 'es', // Set language from storage or default to 'es'
+  lng: initialLanguage,
   fallbackLng: 'en',
   interpolation: {
     escapeValue: false,

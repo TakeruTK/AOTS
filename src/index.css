@@ -12,19 +12,20 @@ h1, h2, h3 {
   color: #FFFFFF;
   text-transform: uppercase;
   letter-spacing: 0.2em;
+  overflow-wrap: anywhere;
 }
 
 h1 {
-  font-size: 3rem;
-  letter-spacing: 0.35em;
+  font-size: clamp(2rem, 7vw, 3rem);
+  letter-spacing: clamp(0.12em, 2vw, 0.35em);
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: clamp(1.55rem, 5vw, 2rem);
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
 }
 
 p {
@@ -32,6 +33,7 @@ p {
     color: #a9a9a9;
     font-size: 1.2em;
     font-weight: 300;
+    overflow-wrap: anywhere;
 }
 
 a {
@@ -48,4 +50,8 @@ a:hover {
   font-family: 'Playfair Display', 'Cormorant Italic', serif;
   font-style: italic;
   color: #E0E0E0;
+}
+
+.MuiTypography-root {
+  overflow-wrap: anywhere;
 }

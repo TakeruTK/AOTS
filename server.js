@@ -1,11 +1,10 @@
-
 import express from 'express';
-import Stripe from 'stripe';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import process from 'node:process';
 
 dotenv.config();
 
@@ -16,108 +15,64 @@ const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json());
-
-// Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
-
-const mercadoPagoAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
-if (!mercadoPagoAccessToken) {
-  console.error("ERROR: MERCADOPAGO_ACCESS_TOKEN no encontrado en .env");
-}
-
-const client = new MercadoPagoConfig({
-  accessToken: mercadoPagoAccessToken,
-});
-
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-let stripe;
-if (!stripeSecretKey) {
-  console.warn("ADVERTENCIA: STRIPE_SECRET_KEY no encontrado en .env. La funcionalidad de Stripe estará deshabilitada.");
-} else {
-  stripe = new Stripe(stripeSecretKey);
-}
-
 const FRONTEND_URL = process.env.VITE_FRONTEND_URL || 'http://localhost:5173';
+const MERCADOPAGO_CLP_RATE = Number(process.env.MERCADOPAGO_CLP_RATE || 950);
+const mercadoPagoAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+const isMercadoPagoConfigured = mercadoPagoAccessToken && !mercadoPagoAccessToken.startsWith('YOUR_');
+const mercadoPagoClient = isMercadoPagoConfigured
+  ? new MercadoPagoConfig({ accessToken: mercadoPagoAccessToken })
+  : null;
+
+const toClp = (amount) => Math.max(Math.round(Number(amount || 0) * MERCADOPAGO_CLP_RATE), 1);
 
 app.post('/api/mercadopago/preference', async (req, res) => {
   const { items } = req.body;
 
-  if (!mercadoPagoAccessToken) {
-    return res.status(500).json({ error: 'El servidor no está configurado para Mercado Pago.' });
+  if (!mercadoPagoClient) {
+    return res.status(500).json({ error: 'Mercado Pago no esta configurado en el servidor.' });
   }
 
-  const line_items = items.map(item => ({
-    title: item.name,
-    unit_price: Number(item.price),
-    quantity: Number(item.quantity),
-    currency_id: "ARS",
-  }));
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'El carrito esta vacio.' });
+  }
 
   const preference = {
-    items: line_items,
+    items: items.map((item) => ({
+      title: item.name,
+      quantity: Number(item.quantity || 1),
+      unit_price: toClp(item.price),
+      currency_id: 'CLP',
+    })),
     back_urls: {
       success: `${FRONTEND_URL}/payment-success`,
       failure: `${FRONTEND_URL}/payment-failed`,
-      pending: `${FRONTEND_URL}/payment-pending`
+      pending: `${FRONTEND_URL}/payment-failed`,
     },
+    statement_descriptor: 'ASHES SOULS',
   };
 
   if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/.test(FRONTEND_URL)) {
     preference.auto_return = 'approved';
   }
-  
-  try {
-    console.log('DEBUG: Mercado Pago preference body ->', JSON.stringify(preference));
-    const response = await new Preference(client).create({ body: preference });
-    res.json({ preferenceId: response.id });
-  } catch (error) {
-    console.error('Error al crear la preferencia de Mercado Pago:', error?.cause ?? error);
-    res.status(500).json({ error: 'No se pudo crear la preferencia de pago.' });
-  }
-});
-
-app.post('/api/stripe/checkout-session', async (req, res) => {
-  const { items } = req.body;
-  
-  if (!stripe) {
-    return res.status(500).json({ error: 'El servidor no está configurado para Stripe.' });
-  }
-
-  const line_items = items.map(item => ({
-    price_data: {
-      currency: 'usd',
-      product_data: {
-        name: item.name,
-        images: [item.image],
-      },
-      unit_amount: Math.round(item.price * 100),
-    },
-    quantity: item.quantity,
-  }));
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items,
-      mode: 'payment',
-      success_url: `${FRONTEND_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${FRONTEND_URL}/payment-failed`,
+    const response = await new Preference(mercadoPagoClient).create({ body: preference });
+    res.json({
+      preferenceId: response.id,
+      initPoint: response.init_point,
+      sandboxInitPoint: response.sandbox_init_point,
     });
-
-    res.json({ id: session.id });
   } catch (error) {
-    console.error("Error al crear la sesión de Stripe:", error);
-    res.status(500).json({ error: 'No se pudo crear la sesión de pago.' });
+    console.error('Error al crear preferencia de Mercado Pago:', error?.cause ?? error);
+    res.status(500).json({ error: 'No se pudo crear el pago con Mercado Pago.' });
   }
 });
 
-// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
-// Catch-all handler: send React's index.html for any unmatched route
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
-
 
 const PORT = process.env.PORT || 4242;
 app.listen(PORT, () => {

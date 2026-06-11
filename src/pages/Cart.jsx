@@ -18,18 +18,23 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import Seo from '../components/Seo';
 
 // Styled component for a subtle animation on item removal
 const CartItemCard = styled(Card, {
   shouldForwardProp: (prop) => prop !== 'isRemoving',
 })(({ theme, isRemoving }) => ({
   display: 'flex',
+  flexDirection: 'row',
   marginBottom: theme.spacing(2),
   backgroundColor: '#2e2e2e',
   color: '#f5f5f5',
   transition: 'opacity 0.5s ease, transform 0.5s ease',
   opacity: isRemoving ? 0 : 1,
   transform: isRemoving ? 'translateX(-100%)' : 'none',
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+  },
 }));
 
 const Cart = () => {
@@ -63,7 +68,8 @@ const Cart = () => {
 
   if (items.length === 0) {
     return (
-      <Container maxWidth="lg" sx={{ mt: 12, textAlign: 'center', color: '#f5f5f5' }}>
+      <Container maxWidth="lg" sx={{ mt: { xs: 10, md: 12 }, textAlign: 'center', color: '#f5f5f5' }}>
+        <Seo title={t('seo.cart.title')} description={t('seo.cart.description')} noindex />
         <Typography variant="h4" gutterBottom sx={{ fontFamily: 'Cinzel, serif' }}>
           {t('cart.empty.title')}
         </Typography>
@@ -87,8 +93,20 @@ const Cart = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 12 }}>
-      <Typography variant="h3" gutterBottom sx={{ fontFamily: 'Cinzel, serif', color: '#f5f5f5', textAlign: 'center', mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: { xs: 10, md: 12 }, overflow: 'hidden' }}>
+      <Seo title={t('seo.cart.title')} description={t('seo.cart.description')} noindex />
+      <Typography
+        variant="h3"
+        gutterBottom
+        sx={{
+          fontFamily: 'Cinzel, serif',
+          color: '#f5f5f5',
+          textAlign: 'center',
+          mb: { xs: 3, md: 4 },
+          fontSize: { xs: '1.65rem', sm: '2.3rem', md: '3rem' },
+          letterSpacing: { xs: '0.1em', sm: '0.16em' },
+        }}
+      >
         {t('cart.title')}
       </Typography>
       <Grid container spacing={4} justifyContent="center">
@@ -97,7 +115,7 @@ const Cart = () => {
             <CartItemCard key={item.id} isRemoving={removingItemId === item.id}>
               <CardMedia
                 component="img"
-                sx={{ width: 120, height: 120, objectFit: 'cover' }}
+                sx={{ width: { xs: '100%', sm: 120 }, height: { xs: 220, sm: 120 }, objectFit: 'cover' }}
                 image={item.image}
                 alt={item.name}
               />
@@ -131,7 +149,7 @@ const Cart = () => {
                   </Box>
                 </CardContent>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'flex-end', sm: 'center' }, p: 2 }}>
                   <Typography variant="h6" sx={{ fontFamily: 'Montserrat, sans-serif' }}>
                       ${item.subtotal.toFixed(2)}
                   </Typography>
@@ -154,7 +172,7 @@ const Cart = () => {
               <Typography>${taxes.toFixed(2)}</Typography>
             </Box>
             <Divider sx={{ my: 2, borderColor: '#444' }} />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '1.2rem' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, fontWeight: 'bold', fontSize: '1.2rem' }}>
               <Typography variant="h6" sx={{ fontFamily: 'Cinzel, serif' }}>{t('cart.summary.total')}</Typography>
               <Typography variant="h6">${totalWithTaxes.toFixed(2)}</Typography>
             </Box>

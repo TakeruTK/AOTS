@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
+import Seo from '../components/Seo';
 
 const sharedSectionBoxStyle = {
   position: 'relative',
-  height: '400px',
+  minHeight: 'clamp(260px, 48vw, 400px)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   color: 'white',
@@ -14,7 +15,7 @@ const sharedSectionBoxStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   textAlign: 'center',
-  padding: '2rem',
+  padding: 'clamp(1.25rem, 4vw, 2rem)',
   textDecoration: 'none',
   border: '1px solid #222',
   overflow: 'hidden',
@@ -62,7 +63,22 @@ const Shop = () => {
   const otherSections = sections.slice(1);
 
   return (
-    <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4 }}>
+    <Container sx={{ pt: { xs: 10, md: 15 }, pb: 4, overflow: 'hidden' }}>
+      <Seo
+        title={t('seo.shop.title')}
+        description={t('seo.shop.description')}
+        keywords={[
+          'shop gothic jewelry',
+          'buy handmade rings',
+          'skull rings online',
+          'silver gothic jewelry',
+          'bronze jewelry',
+          'dark accessories',
+          'international gothic jewelry',
+          'comprar joyería gótica',
+          'anillos artesanales',
+        ]}
+      />
       <Typography
         variant="h2"
         component="h1"
@@ -71,8 +87,9 @@ const Shop = () => {
         sx={{
           fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
           textTransform: 'uppercase',
-          letterSpacing: '0.2em',
-          marginBottom: '3rem',
+          letterSpacing: { xs: '0.1em', sm: '0.16em', md: '0.2em' },
+          fontSize: { xs: '1.7rem', sm: '2rem' },
+          marginBottom: { xs: '2rem', md: '3rem' },
           color: '#FFFFFF'
         }}
       >
@@ -111,8 +128,8 @@ const Shop = () => {
                 component="h2"
                 sx={{
                   fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
-                  fontSize: '2rem',
-                  letterSpacing: '0.1em',
+                  fontSize: { xs: '1.45rem', sm: '1.75rem', md: '2rem' },
+                  letterSpacing: { xs: '0.06em', sm: '0.1em' },
                   textTransform: 'uppercase',
                   color: mainSection.enabled ? '#FFFFFF' : '#444',
                   marginBottom: '1rem'
@@ -143,7 +160,7 @@ const Shop = () => {
               sx={{
                 ...sharedSectionBoxStyle,
                 backgroundImage: `url(${section.imageUrl})`,
-                height: '300px', // Smaller height for secondary sections
+                minHeight: { xs: '240px', md: '300px' },
                 cursor: section.enabled ? 'pointer' : 'default',
                 '& .overlay': {
                     backgroundColor: section.enabled ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.9)',
@@ -167,8 +184,8 @@ const Shop = () => {
                   component="h2"
                   sx={{
                     fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
-                    fontSize: '1.8rem',
-                    letterSpacing: '0.1em',
+                    fontSize: { xs: '1.3rem', sm: '1.55rem', md: '1.8rem' },
+                    letterSpacing: { xs: '0.06em', sm: '0.1em' },
                     textTransform: 'uppercase',
                     color: section.enabled ? '#FFFFFF' : '#444',
                     marginBottom: '1rem'

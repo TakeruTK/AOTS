@@ -20,6 +20,7 @@ import { ArrowBackIos, ArrowForwardIos, Close } from '@mui/icons-material';
 import { products } from '../data/products';
 import useCartStore from '../store/cartStore';
 import { useTranslation } from 'react-i18next';
+import Seo from '../components/Seo';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -93,9 +94,50 @@ function ProductDetail() {
   }
 
   const mainImageSrc = productImages.length > 0 ? productImages[currentImageIndex].src : '';
+  const siteUrl = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/$/, '');
+  const productDescription = t(`product.${product.id}.description`);
+  const productImage = productImages.length > 0 ? productImages[0].src : '';
 
   return (
-    <Container sx={{ pt: { xs: 12, md: 15 }, pb: 4 }}>
+    <Container sx={{ pt: { xs: 10, md: 15 }, pb: 4, overflow: 'hidden' }}>
+      <Seo
+        title={`${product.name} | Handmade Gothic Ring`}
+        description={`${productDescription} Handmade gothic jewelry by Ashes of the Souls, available for international buyers with PayPal checkout.`}
+        keywords={[
+          product.name,
+          'handmade gothic ring',
+          'skull ring',
+          'silver skull ring',
+          'gothic jewelry',
+          'occult jewelry',
+          'artisan jewelry',
+          'anillo gótico',
+          'anillo de calavera',
+          'joyería artesanal',
+        ]}
+        image={productImage}
+        type="product"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.name,
+          description: productDescription,
+          image: productImages.map((item) => `${siteUrl}${item.src}`),
+          brand: {
+            '@type': 'Brand',
+            name: 'Ashes of the Souls',
+          },
+          category: 'Handmade gothic jewelry',
+          offers: {
+            '@type': 'Offer',
+            price: product.price.toFixed(2),
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+            url: `${siteUrl}/product/${product.id}`,
+            itemCondition: 'https://schema.org/NewCondition',
+          },
+        }}
+      />
       <Grid container spacing={4} justifyContent="center" alignItems="center">
         <Grid item xs={12} md={6}>
           <Box 
@@ -106,7 +148,9 @@ function ProductDetail() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              height: { xs: '400px', md: '500px' },
+              aspectRatio: '1 / 1',
+              height: 'auto',
+              minHeight: { xs: 280, sm: 360, md: 500 },
               backgroundColor: '#222',
               border: '1px solid #333',
               cursor: productImages.length > 0 ? 'pointer' : 'default',
@@ -160,7 +204,17 @@ function ProductDetail() {
 
         {/* Product Details */}
         <Grid item xs={12} md={6}>
-          <Typography variant="h3" component="h1" gutterBottom sx={{ fontFamily: "'Cinzel Light', serif", color: '#FFFFFF' }}>
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            sx={{
+              fontFamily: "'Cinzel Light', serif",
+              color: '#FFFFFF',
+              fontSize: { xs: '1.55rem', sm: '2rem', md: '3rem' },
+              letterSpacing: { xs: '0.08em', sm: '0.12em', md: '0.16em' },
+            }}
+          >
             {product.name}
           </Typography>
           <Typography variant="h5" sx={{ color: '#B8860B', mb: 2 }}>
@@ -171,7 +225,7 @@ function ProductDetail() {
           </Typography>
 
           {/* Options */}
-          <Box sx={{ width: '100%', maxWidth: 350 }}>
+          <Box sx={{ width: '100%', maxWidth: { xs: '100%', sm: 350 } }}>
             <FormControl fullWidth sx={{ my: 1.5 }}>
               <InputLabel id="material-label" sx={{color: '#CCCCCC'}}>{t('product.material')}</InputLabel>
               <Select
@@ -225,6 +279,7 @@ function ProductDetail() {
             disabled={isAdding}
             sx={{
               mt: 3,
+              width: { xs: '100%', sm: 'auto' },
               backgroundColor: '#B8860B',
               color: '#000',
               fontWeight: 'bold',

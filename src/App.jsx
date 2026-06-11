@@ -12,6 +12,7 @@ import Header from './components/Header';
 import Shop from './pages/Shop';
 import Jewelry from './pages/Jewelry';
 import About from './pages/About';
+import WhatsAppButton from './components/WhatsAppButton';
 import './App.css';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/jewelry" element={<Jewelry />} />
         <Route path="/about" element={<About />} />
       </Routes>
+      <WhatsAppButton />
     </Suspense>
   );
 }
