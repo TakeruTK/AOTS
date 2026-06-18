@@ -8,6 +8,7 @@
     "server": "node server.js",
     "build": "vite build",
     "lint": "eslint .",
+    "test:admin-products": "node scripts/admin-product-crud-tests.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

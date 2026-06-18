@@ -17,15 +17,18 @@ import {
   DialogActions
 } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos, Close } from '@mui/icons-material';
-import { products } from '../data/products';
 import useCartStore from '../store/cartStore';
 import { useTranslation } from 'react-i18next';
 import Seo from '../components/Seo';
+import useProducts from '../hooks/useProducts';
+import { getAvailableMaterials } from '../utils/productOptions';
+import { formatUsdPrice, getProductPrice, hasProductOffer } from '../utils/pricing';
 
 function ProductDetail() {
   const { id } = useParams();
   const { t } = useTranslation();
   const { addToCart } = useCartStore();
+  const { products, isLoading } = useProducts();
   const product = products.find(p => p.id === parseInt(id));
 
   // State hooks
@@ -37,11 +40,20 @@ function ProductDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const productImages = product?.media?.filter(m => m.type === 'image') || [];
+  const availableMaterials = getAvailableMaterials(product);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setCurrentImageIndex(0);
   }, [id]);
+
+  useEffect(() => {
+    if (!product || availableMaterials.some((option) => option.value === material)) {
+      return;
+    }
+
+    setMaterial(availableMaterials[0]?.value || 'product.material.silver');
+  }, [availableMaterials, material, product]);
 
   const handleNextImage = (e) => {
     e.stopPropagation();
@@ -68,9 +80,11 @@ function ProductDetail() {
     const cartItem = { 
       id: `${product.id}-${material}-${size}-${finish}`,
       name: product.name,
-      price: product.price,
+      price: getProductPrice(product),
+      regularPrice: product.price,
       image: productImages.length > 0 ? productImages[currentImageIndex].src : '',
       material: t(material), // Translate material
+      materialKey: material,
       size, 
       finish: t(finish), // Translate finish
     };
@@ -79,6 +93,14 @@ function ProductDetail() {
       setIsAdding(false);
     }, 1000);
   };
+
+  if (!product && isLoading) {
+    return (
+      <Container sx={{ py: 5, textAlign: 'center', pt: { xs: 10, md: 12 } }}>
+        <CircularProgress sx={{ color: '#B8860B' }} />
+      </Container>
+    );
+  }
 
   if (!product) {
     return (
@@ -95,8 +117,10 @@ function ProductDetail() {
 
   const mainImageSrc = productImages.length > 0 ? productImages[currentImageIndex].src : '';
   const siteUrl = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/$/, '');
-  const productDescription = t(`product.${product.id}.description`);
+  const productDescription = product.description || t(`product.${product.id}.description`);
   const productImage = productImages.length > 0 ? productImages[0].src : '';
+  const productPrice = getProductPrice(product);
+  const productHasOffer = hasProductOffer(product);
 
   return (
     <Container sx={{ pt: { xs: 10, md: 15 }, pb: 4, overflow: 'hidden' }}>
@@ -130,7 +154,7 @@ function ProductDetail() {
           category: 'Handmade gothic jewelry',
           offers: {
             '@type': 'Offer',
-            price: product.price.toFixed(2),
+            price: productPrice.toFixed(2),
             priceCurrency: 'USD',
             availability: 'https://schema.org/InStock',
             url: `${siteUrl}/product/${product.id}`,
@@ -217,11 +241,23 @@ function ProductDetail() {
           >
             {product.name}
           </Typography>
-          <Typography variant="h5" sx={{ color: '#B8860B', mb: 2 }}>
-            ${product.price.toFixed(2)} USD
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>
+            {productHasOffer && (
+              <Typography variant="h6" sx={{ color: '#777', textDecoration: 'line-through' }}>
+                {formatUsdPrice(product.price)}
+              </Typography>
+            )}
+            <Typography variant="h5" sx={{ color: '#B8860B' }}>
+              {formatUsdPrice(productPrice)} USD
+            </Typography>
+            {productHasOffer && (
+              <Typography sx={{ color: '#f5f5f5', backgroundColor: '#7f1d1d', px: 1, py: 0.25, fontSize: '0.8rem', letterSpacing: 0 }}>
+                OFERTA
+              </Typography>
+            )}
+          </Box>
           <Typography variant="body1" paragraph sx={{ color: '#CCCCCC', lineHeight: 1.7, fontFamily: "'Montserrat Light', sans-serif"}}>
-            {t(`product.${product.id}.description`)}
+            {productDescription}
           </Typography>
 
           {/* Options */}
@@ -235,8 +271,9 @@ function ProductDetail() {
                 onChange={(e) => setMaterial(e.target.value)}
                 sx={{color: 'white', '.MuiOutlinedInput-notchedOutline': {borderColor: '#444'}, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {borderColor: '#B8860B'}, '.MuiSvgIcon-root': {color: '#CCCCCC'}}}
               >
-                <MenuItem value="product.material.silver">{t('product.material.silver')}</MenuItem>
-                <MenuItem value="product.material.bronze">{t('product.material.bronze')}</MenuItem>
+                {availableMaterials.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>{t(option.labelKey)}</MenuItem>
+                ))}
               </Select>
             </FormControl>
 

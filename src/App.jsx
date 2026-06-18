@@ -13,6 +13,7 @@ import Shop from './pages/Shop';
 import Jewelry from './pages/Jewelry';
 import About from './pages/About';
 import WhatsAppButton from './components/WhatsAppButton';
+import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/jewelry" element={<Jewelry />} />
         <Route path="/about" element={<About />} />
+        <Route path="/aots-owner-admin" element={<Admin />} />
       </Routes>
       <WhatsAppButton />
     </Suspense>

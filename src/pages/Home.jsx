@@ -3,19 +3,19 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { Typography, Box } from '@mui/material';
-import { products } from '../data/products'; // Import real product data
 import { useTranslation } from 'react-i18next';
 import Seo from '../components/Seo';
+import useProducts from '../hooks/useProducts';
 
 const Home = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { products } = useProducts();
 
     const handleProductClick = (productId) => {
         navigate(`/product/${productId}`);
     };
 
-    // Select a few featured products to display on the home page
     const featuredProducts = products.slice(0, 4);
 
     return (

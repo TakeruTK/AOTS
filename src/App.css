@@ -102,7 +102,32 @@ canvas {
     font-family: 'Montserrat Light', 'Lato Light', sans-serif;
     color: #B8860B;
     font-size: 1.2rem;
+    margin: 0;
+}
+
+.product-price-row {
+    min-height: 2rem;
     margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.product-price-old {
+    color: #777777;
+    font-size: 0.95rem;
+    text-decoration: line-through;
+}
+
+.product-offer-badge {
+    background: #7f1d1d;
+    color: #ffffff;
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.25rem 0.4rem;
+    letter-spacing: 0;
 }
 
 .product-name {

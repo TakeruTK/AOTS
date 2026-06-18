@@ -3,12 +3,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Grid } from '@mui/material';
 import ProductCard from '../components/ProductCard';
-import { products } from '../data/products'; // Import the centralized product data
 import '../App.css';
 import Seo from '../components/Seo';
+import useProducts from '../hooks/useProducts';
 
 const Jewelry = () => {
   const navigate = useNavigate();
+  const { products } = useProducts();
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);

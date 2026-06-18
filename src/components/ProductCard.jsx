@@ -3,11 +3,18 @@ import React from 'react';
 import { IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import useCartStore from '../store/cartStore';
+import { useTranslation } from 'react-i18next';
+import { getAvailableMaterials } from '../utils/productOptions';
+import { formatUsdPrice, getProductPrice, hasProductOffer } from '../utils/pricing';
 
 const ProductCard = ({ product, onViewDetails }) => {
+  const { t } = useTranslation();
   const { addToCart } = useCartStore();
   const mainImage = product.media && product.media.find(m => m.type === 'image');
   const imageUrl = mainImage ? mainImage.src : '/path/to/default-image.jpg';
+  const productPrice = getProductPrice(product);
+  const productHasOffer = hasProductOffer(product);
+  const defaultMaterial = getAvailableMaterials(product)[0] || { value: 'product.material.silver', labelKey: 'product.material.silver' };
 
   // This handler adds the product to the cart and stops the event from bubbling up
   // to the parent container, which would trigger `onViewDetails`.
@@ -16,10 +23,15 @@ const ProductCard = ({ product, onViewDetails }) => {
     
     // We create a slimmed-down product object for the cart
     const productToAdd = {
-        id: product.id,
+        id: `${product.id}-${defaultMaterial.value}-18mm-product.finish.polished`,
         name: product.name,
-        price: product.price,
+        price: productPrice,
+        regularPrice: product.price,
         image: imageUrl,
+        material: t(defaultMaterial.labelKey),
+        materialKey: defaultMaterial.value,
+        size: '18mm',
+        finish: t('product.finish.polished'),
     };
     addToCart(productToAdd);
   };
@@ -54,7 +66,11 @@ const ProductCard = ({ product, onViewDetails }) => {
           </IconButton>
       </div>
       <div className="product-info">
-        <p className="product-price">${product.price.toFixed(2)}</p>
+        <div className="product-price-row">
+          {productHasOffer && <span className="product-price-old">{formatUsdPrice(product.price)}</span>}
+          <p className="product-price">{formatUsdPrice(productPrice)}</p>
+          {productHasOffer && <span className="product-offer-badge">OFERTA</span>}
+        </div>
         <h3 className="product-name">{product.name}</h3>
       </div>
     </div>

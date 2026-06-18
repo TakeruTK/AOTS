@@ -127,6 +127,11 @@ const Cart = () => {
                   <Typography variant="subtitle1" color="#B8860B" sx={{ my: 1 }}>
                     ${item.price.toFixed(2)}
                   </Typography>
+                  {(item.material || item.size || item.finish) && (
+                    <Typography variant="body2" sx={{ color: '#cfcfcf', mb: 1 }}>
+                      {[item.material, item.size, item.finish].filter(Boolean).join(' / ')}
+                    </Typography>
+                  )}
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                     <TextField
                       type="number"
