@@ -14,6 +14,8 @@ import {
   ListItemButton,
   Paper,
   Stack,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
@@ -107,6 +109,12 @@ const Admin = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [form, setForm] = useState(emptyProductForm);
   const [imageUrl, setImageUrl] = useState('');
+  const [activeSection, setActiveSection] = useState('products');
+  const [portfolioImages, setPortfolioImages] = useState([]);
+  const [portfolioTitle, setPortfolioTitle] = useState('');
+  const [portfolioUrl, setPortfolioUrl] = useState('');
+  const [isPortfolioLoading, setIsPortfolioLoading] = useState(false);
+  const [isPortfolioSaving, setIsPortfolioSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -174,6 +182,41 @@ const Admin = () => {
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
+
+  const loadPortfolioImages = useCallback(async () => {
+    if (!token) {
+      return;
+    }
+
+    setIsPortfolioLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/portfolio`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+
+      if (response.status === 401) {
+        clearSession();
+        throw new Error('La sesion expiro.');
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || 'No se pudo cargar el portafolio.');
+      }
+
+      setPortfolioImages(Array.isArray(data.images) ? data.images : []);
+    } catch (err) {
+      setError(err.message || 'No se pudo cargar el portafolio.');
+    } finally {
+      setIsPortfolioLoading(false);
+    }
+  }, [clearSession, token]);
+
+  useEffect(() => {
+    loadPortfolioImages();
+  }, [loadPortfolioImages]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -380,6 +423,112 @@ const Admin = () => {
     }
   };
 
+  const handleAddPortfolioImage = async ({ src, title }) => {
+    const cleanSrc = String(src || '').trim();
+
+    if (!cleanSrc) {
+      return;
+    }
+
+    setIsPortfolioSaving(true);
+    setError('');
+    setStatus('');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/portfolio`, {
+        method: 'POST',
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          title: title || `Design ${portfolioImages.length + 1}`,
+          src: cleanSrc,
+        }),
+      });
+      const data = await response.json();
+
+      if (!response.ok || !data.image) {
+        throw new Error(data.error || 'No se pudo agregar la imagen al portafolio.');
+      }
+
+      setPortfolioImages((currentImages) => [...currentImages, data.image]);
+      setPortfolioTitle('');
+      setPortfolioUrl('');
+      setStatus('Imagen agregada al portafolio.');
+    } catch (err) {
+      setError(err.message || 'No se pudo agregar la imagen al portafolio.');
+    } finally {
+      setIsPortfolioSaving(false);
+    }
+  };
+
+  const handleUploadPortfolioFiles = async (event) => {
+    const files = Array.from(event.target.files || []);
+    event.target.value = '';
+
+    if (!files.length) {
+      return;
+    }
+
+    setIsPortfolioSaving(true);
+    setError('');
+    setStatus('');
+
+    try {
+      for (const file of files) {
+        const dataUrl = await readFileAsDataUrl(file);
+        const uploadResponse = await fetch(`${API_BASE_URL}/api/admin/uploads`, {
+          method: 'POST',
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            fileName: file.name,
+            dataUrl,
+            productName: 'portfolio',
+          }),
+        });
+        const uploadData = await uploadResponse.json();
+
+        if (!uploadResponse.ok || !uploadData.src) {
+          throw new Error(uploadData.error || 'No se pudo subir una imagen del portafolio.');
+        }
+
+        await handleAddPortfolioImage({
+          src: uploadData.src,
+          title: portfolioTitle || file.name.replace(/\.[^.]+$/, ''),
+        });
+      }
+
+      setStatus('Imagen subida al portafolio.');
+    } catch (err) {
+      setError(err.message || 'No se pudo subir la imagen del portafolio.');
+    } finally {
+      setIsPortfolioSaving(false);
+    }
+  };
+
+  const handleDeletePortfolioImage = async (imageId) => {
+    setIsPortfolioSaving(true);
+    setError('');
+    setStatus('');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/portfolio/${imageId}`, {
+        method: 'DELETE',
+        headers: authHeaders(),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'No se pudo eliminar la imagen del portafolio.');
+      }
+
+      setPortfolioImages((currentImages) => currentImages.filter((image) => image.id !== imageId));
+      setStatus('Imagen eliminada del portafolio.');
+    } catch (err) {
+      setError(err.message || 'No se pudo eliminar la imagen del portafolio.');
+    } finally {
+      setIsPortfolioSaving(false);
+    }
+  };
+
   if (!token) {
     return (
       <Container maxWidth="xs" sx={{ pt: { xs: 10, md: 14 }, pb: 6 }}>
@@ -439,6 +588,30 @@ const Admin = () => {
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {status && <Alert severity="success" sx={{ mb: 2 }}>{status}</Alert>}
 
+      <Paper sx={{ mb: 3, backgroundColor: '#111', border: '1px solid #2c2c2c', borderRadius: 1 }}>
+        <Tabs
+          value={activeSection}
+          onChange={(_event, value) => setActiveSection(value)}
+          textColor="inherit"
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            color: '#f5f5f5',
+            '& .MuiTabs-indicator': { backgroundColor: '#B8860B' },
+            '& .MuiTab-root': {
+              color: '#aaa',
+              fontFamily: 'Cinzel, serif',
+              letterSpacing: '0.08em',
+            },
+            '& .Mui-selected': { color: '#fff' },
+          }}
+        >
+          <Tab value="products" label="Productos" />
+          <Tab value="portfolio" label="Portafolio" />
+        </Tabs>
+      </Paper>
+
+      {activeSection === 'products' && (
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
           <Paper sx={{ backgroundColor: '#111', color: '#f5f5f5', border: '1px solid #2c2c2c', borderRadius: 1, overflow: 'hidden' }}>
@@ -593,9 +766,18 @@ const Admin = () => {
                   </Button>
                 </Stack>
 
-                <Grid container spacing={1.5}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(92px, 1fr))',
+                    gap: 1.25,
+                    maxHeight: 360,
+                    overflowY: 'auto',
+                    pr: 0.5,
+                  }}
+                >
                   {form.media.map((item, index) => (
-                    <Grid item xs={6} sm={4} md={3} key={`${item.src}-${index}`}>
+                    <Box key={`${item.src}-${index}`} sx={{ minWidth: 0 }}>
                       <Box sx={{ position: 'relative', border: '1px solid #333', backgroundColor: '#1d1d1d', aspectRatio: '1 / 1' }}>
                         <Box
                           component="img"
@@ -618,17 +800,17 @@ const Admin = () => {
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </Box>
-                    </Grid>
+                    </Box>
                   ))}
                   {!form.media.length && (
-                    <Grid item xs={12}>
+                    <Box sx={{ gridColumn: '1 / -1' }}>
                       <Box sx={{ border: '1px dashed #444', p: 3, textAlign: 'center', color: '#aaa' }}>
                         <AddPhotoAlternateIcon sx={{ mb: 1 }} />
                         <Typography>Sin imagenes.</Typography>
                       </Box>
-                    </Grid>
+                    </Box>
                   )}
-                </Grid>
+                </Box>
               </Box>
 
               <Stack direction={{ xs: 'column', sm: 'row' }} gap={1.5} justifyContent="space-between">
@@ -656,6 +838,125 @@ const Admin = () => {
           </Paper>
         </Grid>
       </Grid>
+      )}
+
+      {activeSection === 'portfolio' && (
+        <Paper sx={{ p: { xs: 2, sm: 3 }, backgroundColor: '#111', color: '#f5f5f5', border: '1px solid #2c2c2c', borderRadius: 1 }}>
+          <Stack spacing={2.5}>
+            <Box>
+              <Typography variant="h4" sx={{ fontFamily: 'Cinzel, serif', fontSize: { xs: '1.45rem', md: '1.9rem' } }}>
+                Imagenes del portafolio
+              </Typography>
+              <Typography sx={{ color: '#aaa', fontSize: '0.95rem', mt: 0.5 }}>
+                Administra las imagenes que aparecen en la pagina de portafolio sin mezclarlas con los productos.
+              </Typography>
+            </Box>
+
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5}>
+              <TextField
+                label="Titulo"
+                value={portfolioTitle}
+                onChange={(event) => setPortfolioTitle(event.target.value)}
+                sx={{ ...adminTextFieldSx, minWidth: { md: 240 } }}
+              />
+              <TextField
+                label="URL o ruta de imagen"
+                value={portfolioUrl}
+                onChange={(event) => setPortfolioUrl(event.target.value)}
+                fullWidth
+                sx={adminTextFieldSx}
+              />
+              <Button
+                startIcon={<LinkIcon />}
+                variant="outlined"
+                disabled={isPortfolioSaving}
+                onClick={() => handleAddPortfolioImage({ src: portfolioUrl, title: portfolioTitle })}
+                sx={{ borderColor: '#B8860B', color: '#B8860B', minWidth: 150 }}
+              >
+                Agregar
+              </Button>
+              <Button
+                component="label"
+                startIcon={<UploadFileIcon />}
+                variant="outlined"
+                disabled={isPortfolioSaving}
+                sx={{ borderColor: '#555', color: '#ddd', minWidth: 150 }}
+              >
+                Subir
+                <input hidden multiple accept="image/*" type="file" onChange={handleUploadPortfolioFiles} />
+              </Button>
+            </Stack>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+                gap: 1.5,
+                maxHeight: '62vh',
+                overflowY: 'auto',
+                pr: 0.5,
+              }}
+            >
+              {portfolioImages.map((image) => (
+                <Box
+                  key={image.id}
+                  sx={{
+                    position: 'relative',
+                    border: '1px solid #333',
+                    backgroundColor: '#1d1d1d',
+                    aspectRatio: '1 / 1',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={image.src}
+                    alt={image.title}
+                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      px: 1,
+                      py: 0.75,
+                      backgroundColor: 'rgba(0,0,0,0.72)',
+                    }}
+                  >
+                    <Typography sx={{ fontSize: '0.75rem', color: '#fff', overflowWrap: 'anywhere' }}>
+                      {image.title}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    aria-label="Eliminar imagen del portafolio"
+                    disabled={isPortfolioSaving}
+                    onClick={() => handleDeletePortfolioImage(image.id)}
+                    sx={{
+                      position: 'absolute',
+                      top: 6,
+                      right: 6,
+                      backgroundColor: 'rgba(0,0,0,0.7)',
+                      color: '#fff',
+                      '&:hover': { backgroundColor: '#7f1d1d' },
+                    }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              ))}
+
+              {!portfolioImages.length && (
+                <Box sx={{ gridColumn: '1 / -1', border: '1px dashed #444', p: 4, textAlign: 'center', color: '#aaa' }}>
+                  <AddPhotoAlternateIcon sx={{ mb: 1 }} />
+                  <Typography>{isPortfolioLoading ? 'Cargando...' : 'Sin imagenes de portafolio.'}</Typography>
+                </Box>
+              )}
+            </Box>
+          </Stack>
+        </Paper>
+      )}
     </Container>
   );
 };

@@ -31,6 +31,7 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/jewelry" element={<Jewelry />} />
         <Route path="/about" element={<About />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/aots-owner-admin" element={<Admin />} />
       </Routes>
       <WhatsAppButton />

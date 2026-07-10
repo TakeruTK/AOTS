@@ -35,6 +35,7 @@ const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const PRODUCTS_DATA_DIR = path.join(__dirname, 'data');
 const PRODUCTS_DATA_FILE = path.join(PRODUCTS_DATA_DIR, 'products.json');
+const PORTFOLIO_DATA_FILE = path.join(PRODUCTS_DATA_DIR, 'portfolio.json');
 const UPLOADS_ROOT = path.join(__dirname, 'public', 'imagenes', 'productos', 'admin');
 const adminSessions = new Set();
 const isMercadoPagoConfigured = mercadoPagoAccessToken && !mercadoPagoAccessToken.startsWith('YOUR_');
@@ -127,6 +128,54 @@ const writeProducts = (products) => {
   fs.writeFileSync(tempFile, JSON.stringify(normalizedProducts, null, 2), 'utf8');
   fs.renameSync(tempFile, PRODUCTS_DATA_FILE);
   return normalizedProducts;
+};
+
+const getSeedPortfolioImages = () => Array.from({ length: 28 }, (_, index) => ({
+  id: `portfolio-${index + 1}`,
+  title: `Design ${index + 1}`,
+  src: `/imagenes/portafolio/página_${index + 1}.jpg`,
+}));
+
+const normalizePortfolioImage = (rawImage, existingImages = []) => {
+  const src = String(rawImage?.src || '').trim();
+  const title = String(rawImage?.title || '').trim();
+  const id = String(rawImage?.id || '').trim() || crypto.randomUUID();
+
+  if (!src) {
+    const error = new Error('La imagen del portafolio es obligatoria.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return {
+    id: existingImages.some((image) => image.id === id) ? id : id,
+    title: title || `Portfolio ${existingImages.length + 1}`,
+    src,
+  };
+};
+
+const readPortfolioImages = () => {
+  try {
+    if (fs.existsSync(PORTFOLIO_DATA_FILE)) {
+      const parsedImages = JSON.parse(fs.readFileSync(PORTFOLIO_DATA_FILE, 'utf8'));
+      if (Array.isArray(parsedImages)) {
+        return parsedImages.map((image) => normalizePortfolioImage(image, parsedImages));
+      }
+    }
+  } catch (error) {
+    console.error('Error al leer portafolio guardado:', error);
+  }
+
+  return getSeedPortfolioImages();
+};
+
+const writePortfolioImages = (images) => {
+  fs.mkdirSync(PRODUCTS_DATA_DIR, { recursive: true });
+  const normalizedImages = images.map((image) => normalizePortfolioImage(image, images));
+  const tempFile = `${PORTFOLIO_DATA_FILE}.tmp`;
+  fs.writeFileSync(tempFile, JSON.stringify(normalizedImages, null, 2), 'utf8');
+  fs.renameSync(tempFile, PORTFOLIO_DATA_FILE);
+  return normalizedImages;
 };
 
 const requireAdmin = (req, res, next) => {
@@ -266,6 +315,10 @@ app.get('/api/products', (_req, res) => {
   res.json({ products: readProducts() });
 });
 
+app.get('/api/portfolio', (_req, res) => {
+  res.json({ images: readPortfolioImages() });
+});
+
 app.post('/api/admin/login', (req, res) => {
   const username = String(req.body?.username || '');
   const password = String(req.body?.password || '');
@@ -323,6 +376,34 @@ app.delete('/api/admin/products/:id', requireAdmin, (req, res) => {
   }
 
   writeProducts(nextProducts);
+  return res.json({ ok: true });
+});
+
+app.get('/api/admin/portfolio', requireAdmin, (_req, res) => {
+  res.json({ images: readPortfolioImages() });
+});
+
+app.post('/api/admin/portfolio', requireAdmin, (req, res) => {
+  try {
+    const images = readPortfolioImages();
+    const image = normalizePortfolioImage({ ...req.body, id: crypto.randomUUID() }, images);
+    const savedImages = writePortfolioImages([...images, image]);
+    return res.status(201).json({ image: savedImages.find((item) => item.id === image.id) });
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({ error: error.message || 'No se pudo agregar la imagen.' });
+  }
+});
+
+app.delete('/api/admin/portfolio/:id', requireAdmin, (req, res) => {
+  const imageId = String(req.params.id || '');
+  const images = readPortfolioImages();
+  const nextImages = images.filter((image) => image.id !== imageId);
+
+  if (nextImages.length === images.length) {
+    return res.status(404).json({ error: 'Imagen no encontrada.' });
+  }
+
+  writePortfolioImages(nextImages);
   return res.json({ ok: true });
 });
 
