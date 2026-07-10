@@ -36,6 +36,14 @@ canvas {
     padding: 1rem 0;
 }
 
+.shop-product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 260px));
+    justify-content: center;
+    align-items: stretch;
+    gap: clamp(1.25rem, 2.4vw, 2rem);
+    width: min(100%, 1160px);
+}
+
 .product-grid-item {
     min-width: 0;
     display: flex;
@@ -90,7 +98,7 @@ canvas {
 
 
 .product-info {
-    padding: clamp(1rem, 3vw, 1.5rem) 1rem;
+    padding: clamp(0.9rem, 2vw, 1.25rem) 0.95rem;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -134,8 +142,9 @@ canvas {
     font-family: 'Cinzel Light', 'Cormorant SC', serif;
     color: #FFFFFF;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    font-size: 1.3rem;
+    letter-spacing: 0.14em;
+    font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+    line-height: 1.25;
     margin: 0 0 0.5rem 0;
     overflow-wrap: anywhere;
 }
@@ -246,6 +255,11 @@ canvas {
 
     .product-grid {
         gap: 1.25rem;
+    }
+
+    .shop-product-grid {
+        grid-template-columns: minmax(0, 1fr);
+        width: min(100%, 360px);
     }
 
     .product-name {

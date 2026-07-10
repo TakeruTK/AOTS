@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, Grid } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import ProductCard from '../components/ProductCard';
 import '../App.css';
 import Seo from '../components/Seo';
@@ -18,7 +17,16 @@ const Jewelry = () => {
   const jewelryProducts = products;
 
   return (
-    <Container sx={{ pt: { xs: 10, md: 15 }, pb: 4, textAlign: 'center', overflow: 'hidden' }}>
+    <Container
+      maxWidth={false}
+      sx={{
+        pt: { xs: 9, md: 12 },
+        pb: { xs: 5, md: 8 },
+        px: { xs: 2, sm: 3, md: 5 },
+        textAlign: 'center',
+        overflow: 'hidden',
+      }}
+    >
       <Seo
         title="Gothic Rings and Handmade Jewelry"
         description="Shop handmade gothic rings, skull rings, silver jewelry, bronze pieces, and dark artisan accessories by Ashes of the Souls."
@@ -58,23 +66,23 @@ const Jewelry = () => {
           fontFamily: "'Cinzel Light', 'Cormorant SC', serif",
           textTransform: 'uppercase',
           letterSpacing: { xs: '0.1em', sm: '0.16em', md: '0.2em' },
-          fontSize: { xs: '1.7rem', sm: '2rem' },
-          marginBottom: { xs: '2rem', md: '3rem' },
-          color: '#FFFFFF'
+          fontSize: { xs: '1.55rem', sm: '1.9rem', md: '2.15rem' },
+          marginBottom: { xs: '1.75rem', md: '2.5rem' },
+          color: '#FFFFFF',
         }}
       >
         Joyería
       </Typography>
-      <Grid container spacing={4} justifyContent="center">
-        {jewelryProducts.map(product => (
-          <Grid item key={product.id} xs={12} sm={6} md={4}>
-            <ProductCard 
-              product={product} 
+      <Box className="product-grid shop-product-grid">
+        {jewelryProducts.map((product) => (
+          <Box className="product-grid-item" key={product.id}>
+            <ProductCard
+              product={product}
               onViewDetails={() => handleProductClick(product.id)}
             />
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
     </Container>
   );
 };
