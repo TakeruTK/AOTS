@@ -11,6 +11,7 @@ import crypto from 'node:crypto';
 import { products as seedProducts } from './src/data/products.js';
 import { getProductPrice } from './src/utils/pricing.js';
 import { MATERIAL_OPTIONS, getAvailableMaterials, isMaterialAllowed, normalizeMaterialValues } from './src/utils/productOptions.js';
+import { isProductAvailable, normalizeAvailabilityStatus } from './src/utils/availability.js';
 
 dotenv.config();
 
@@ -101,6 +102,8 @@ const normalizeProduct = (rawProduct, existingProducts = []) => {
     description,
     price,
     salePrice,
+    availabilityStatus: normalizeAvailabilityStatus(rawProduct?.availabilityStatus),
+    availabilityMessage: String(rawProduct?.availabilityMessage || '').trim(),
     materials: normalizeMaterialValues(rawProduct?.materials),
     media: normalizeMedia(rawProduct?.media),
   };
@@ -272,6 +275,12 @@ const getValidatedCartItems = (items) => {
       throw error;
     }
 
+    if (!isProductAvailable(product)) {
+      const error = new Error(`La agenda de ${product.name} esta cerrada temporalmente.`);
+      error.statusCode = 400;
+      throw error;
+    }
+
     return {
       id: product.id,
       name: product.name,
@@ -417,12 +426,13 @@ app.post('/api/admin/uploads', requireAdmin, (req, res) => {
 });
 
 app.post('/api/paypal/orders', async (req, res) => {
-  if (!isPayPalConfigured) {
-    return res.status(500).json({ error: 'PayPal no esta configurado en el servidor.' });
-  }
-
   try {
     const cartItems = getValidatedCartItems(req.body.items);
+
+    if (!isPayPalConfigured) {
+      return res.status(500).json({ error: 'PayPal no esta configurado en el servidor.' });
+    }
+
     const accessToken = await getPayPalAccessToken();
     const response = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders`, {
       method: 'POST',
@@ -503,12 +513,13 @@ app.post('/api/paypal/orders/:orderId/capture', async (req, res) => {
 app.post('/api/mercadopago/preference', async (req, res) => {
   const { items } = req.body;
 
-  if (!mercadoPagoClient) {
-    return res.status(500).json({ error: 'Mercado Pago no esta configurado en el servidor.' });
-  }
-
   try {
     const cartItems = getValidatedCartItems(items);
+
+    if (!mercadoPagoClient) {
+      return res.status(500).json({ error: 'Mercado Pago no esta configurado en el servidor.' });
+    }
+
     const preference = {
       items: cartItems.map((item) => ({
         id: String(item.id),

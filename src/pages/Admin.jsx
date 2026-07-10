@@ -29,6 +29,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useTranslation } from 'react-i18next';
 import { API_BASE_URL } from '../services/catalog';
+import { PRODUCT_AVAILABILITY, isProductAvailable, normalizeAvailabilityStatus } from '../utils/availability';
 import { MATERIAL_OPTIONS, normalizeMaterialValues } from '../utils/productOptions';
 import { formatUsdPrice, getProductPrice, hasProductOffer } from '../utils/pricing';
 
@@ -39,6 +40,8 @@ const emptyProductForm = {
   description: '',
   price: '',
   salePrice: '',
+  availabilityStatus: PRODUCT_AVAILABILITY.AVAILABLE,
+  availabilityMessage: '',
   materials: [],
   media: [],
 };
@@ -85,6 +88,8 @@ const productToForm = (product) => ({
   description: product.description || '',
   price: product.price ?? '',
   salePrice: product.salePrice ?? '',
+  availabilityStatus: normalizeAvailabilityStatus(product.availabilityStatus),
+  availabilityMessage: product.availabilityMessage || '',
   materials: normalizeMaterialValues(product.materials),
   media: Array.isArray(product.media) ? product.media : [],
 });
@@ -95,6 +100,8 @@ const buildProductPayload = (form) => ({
   description: form.description,
   price: Number(form.price),
   salePrice: form.salePrice === '' ? null : Number(form.salePrice),
+  availabilityStatus: normalizeAvailabilityStatus(form.availabilityStatus),
+  availabilityMessage: String(form.availabilityMessage || '').trim(),
   materials: normalizeMaterialValues(form.materials),
   media: form.media
     .map((item) => ({ type: item.type === 'video' ? 'video' : 'image', src: String(item.src || '').trim() }))
@@ -281,6 +288,15 @@ const Admin = () => {
         materials: normalizeMaterialValues(nextMaterials),
       };
     });
+  };
+
+  const handleAvailabilityToggle = (event) => {
+    setForm((currentForm) => ({
+      ...currentForm,
+      availabilityStatus: event.target.checked
+        ? PRODUCT_AVAILABILITY.AVAILABLE
+        : PRODUCT_AVAILABILITY.CLOSED,
+    }));
   };
 
   const handleAddImageUrl = () => {
@@ -624,6 +640,7 @@ const Admin = () => {
               {products.map((product) => {
                 const productHasOffer = hasProductOffer(product);
                 const productMaterials = normalizeMaterialValues(product.materials);
+                const productAvailable = isProductAvailable(product);
                 return (
                   <ListItemButton
                     key={product.id}
@@ -656,6 +673,11 @@ const Admin = () => {
                             ? productMaterials.map((material) => t(material)).join(', ')
                             : 'Cualquier material'}
                         </Typography>
+                        {!productAvailable && (
+                          <Typography sx={{ color: '#fca5a5', fontSize: '0.78rem', fontWeight: 700 }}>
+                            Agenda cerrada
+                          </Typography>
+                        )}
                       </Stack>
                     </Box>
                   </ListItemButton>
@@ -708,6 +730,43 @@ const Admin = () => {
                   />
                 </Grid>
               </Grid>
+
+              <Box sx={{ border: '1px solid #2c2c2c', p: 2, backgroundColor: '#151515' }}>
+                <Typography variant="h6" sx={{ fontFamily: 'Cinzel, serif', mb: 1 }}>
+                  Disponibilidad del producto
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={normalizeAvailabilityStatus(form.availabilityStatus) === PRODUCT_AVAILABILITY.AVAILABLE}
+                      onChange={handleAvailabilityToggle}
+                      sx={{
+                        color: '#ffffff',
+                        '&.Mui-checked': { color: '#B8860B' },
+                      }}
+                    />
+                  }
+                  label="Agenda abierta para pedidos"
+                  sx={{
+                    color: '#ffffff',
+                    mb: 1,
+                    '& .MuiFormControlLabel-label': {
+                      color: '#ffffff',
+                    },
+                  }}
+                />
+                <TextField
+                  label="Mensaje si la agenda esta cerrada"
+                  value={form.availabilityMessage}
+                  onChange={handleFieldChange('availabilityMessage')}
+                  fullWidth
+                  placeholder="Ej: Agenda cerrada temporalmente por alta demanda."
+                  sx={adminTextFieldSx}
+                />
+                <Typography sx={{ color: '#aaa', fontSize: '0.9rem', mt: 1 }}>
+                  Si cierras la agenda, el producto se muestra como no disponible y no se podra pagar desde checkout.
+                </Typography>
+              </Box>
 
               <Box>
                 <Typography variant="h6" sx={{ fontFamily: 'Cinzel, serif', mb: 1 }}>

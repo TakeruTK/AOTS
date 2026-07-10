@@ -21,6 +21,7 @@ import useCartStore from '../store/cartStore';
 import { useTranslation } from 'react-i18next';
 import Seo from '../components/Seo';
 import useProducts from '../hooks/useProducts';
+import { getProductAvailabilityLabelKey, isProductAvailable } from '../utils/availability';
 import { getAvailableMaterials } from '../utils/productOptions';
 import { formatUsdPrice, getProductPrice, hasProductOffer } from '../utils/pricing';
 
@@ -76,6 +77,10 @@ function ProductDetail() {
   };
   
   const handleAddToCart = () => {
+    if (!isProductAvailable(product)) {
+      return;
+    }
+
     setIsAdding(true);
     const cartItem = { 
       id: `${product.id}-${material}-${size}-${finish}`,
@@ -121,6 +126,8 @@ function ProductDetail() {
   const productImage = productImages.length > 0 ? productImages[0].src : '';
   const productPrice = getProductPrice(product);
   const productHasOffer = hasProductOffer(product);
+  const productAvailable = isProductAvailable(product);
+  const closedMessage = product.availabilityMessage || t('product.closed_message');
 
   return (
     <Container sx={{ pt: { xs: 10, md: 15 }, pb: 4, overflow: 'hidden' }}>
@@ -156,7 +163,7 @@ function ProductDetail() {
             '@type': 'Offer',
             price: productPrice.toFixed(2),
             priceCurrency: 'USD',
-            availability: 'https://schema.org/InStock',
+            availability: productAvailable ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
             url: `${siteUrl}/product/${product.id}`,
             itemCondition: 'https://schema.org/NewCondition',
           },
@@ -259,6 +266,26 @@ function ProductDetail() {
           <Typography variant="body1" paragraph sx={{ color: '#CCCCCC', lineHeight: 1.7, fontFamily: "'Montserrat Light', sans-serif"}}>
             {productDescription}
           </Typography>
+          <Box
+            sx={{
+              border: productAvailable ? '1px solid #333' : '1px solid #7f1d1d',
+              backgroundColor: productAvailable ? '#151515' : 'rgba(127, 29, 29, 0.18)',
+              color: productAvailable ? '#d1d5db' : '#fecaca',
+              px: 2,
+              py: 1.25,
+              mb: 2,
+              maxWidth: { xs: '100%', sm: 420 },
+            }}
+          >
+            <Typography sx={{ fontWeight: 700, letterSpacing: 0 }}>
+              {t(getProductAvailabilityLabelKey(product))}
+            </Typography>
+            {!productAvailable && (
+              <Typography sx={{ mt: 0.5, color: '#fca5a5', fontSize: '0.95rem' }}>
+                {closedMessage}
+              </Typography>
+            )}
+          </Box>
 
           {/* Options */}
           <Box sx={{ width: '100%', maxWidth: { xs: '100%', sm: 350 } }}>
@@ -313,7 +340,7 @@ function ProductDetail() {
             variant="contained" 
             size="large" 
             onClick={handleAddToCart}
-            disabled={isAdding}
+            disabled={isAdding || !productAvailable}
             sx={{
               mt: 3,
               width: { xs: '100%', sm: 'auto' },
@@ -328,7 +355,7 @@ function ProductDetail() {
               }
             }}
           >
-            {isAdding ? <CircularProgress size={24} sx={{ color: '#000' }} /> : t('product.add_to_cart')}
+            {isAdding ? <CircularProgress size={24} sx={{ color: '#000' }} /> : productAvailable ? t('product.add_to_cart') : t('product.closed_button')}
           </Button>
         </Grid>
       </Grid>

@@ -4,6 +4,7 @@ import { IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import useCartStore from '../store/cartStore';
 import { useTranslation } from 'react-i18next';
+import { getProductAvailabilityLabelKey, isProductAvailable } from '../utils/availability';
 import { getAvailableMaterials } from '../utils/productOptions';
 import { formatUsdPrice, getProductPrice, hasProductOffer } from '../utils/pricing';
 
@@ -14,12 +15,17 @@ const ProductCard = ({ product, onViewDetails }) => {
   const imageUrl = mainImage ? mainImage.src : '/path/to/default-image.jpg';
   const productPrice = getProductPrice(product);
   const productHasOffer = hasProductOffer(product);
+  const productAvailable = isProductAvailable(product);
   const defaultMaterial = getAvailableMaterials(product)[0] || { value: 'product.material.silver', labelKey: 'product.material.silver' };
 
   // This handler adds the product to the cart and stops the event from bubbling up
   // to the parent container, which would trigger `onViewDetails`.
   const handleAddToCart = (e) => {
     e.stopPropagation();
+
+    if (!productAvailable) {
+      return;
+    }
     
     // We create a slimmed-down product object for the cart
     const productToAdd = {
@@ -47,6 +53,7 @@ const ProductCard = ({ product, onViewDetails }) => {
         <IconButton
             aria-label="add to cart"
             onClick={handleAddToCart}
+            disabled={!productAvailable}
             className="add-to-cart-btn" // Used for CSS hover effect
             sx={{
               position: 'absolute',
@@ -60,6 +67,10 @@ const ProductCard = ({ product, onViewDetails }) => {
                 backgroundColor: '#B8860B', // Solid gold on hover
                 transform: 'scale(1.1)',
               },
+              '&.Mui-disabled': {
+                color: '#777',
+                backgroundColor: 'rgba(80, 80, 80, 0.85)',
+              },
             }}
           >
             <AddShoppingCartIcon />
@@ -72,6 +83,9 @@ const ProductCard = ({ product, onViewDetails }) => {
           {productHasOffer && <span className="product-offer-badge">OFERTA</span>}
         </div>
         <h3 className="product-name">{product.name}</h3>
+        <p className={productAvailable ? 'product-availability' : 'product-availability product-availability-closed'}>
+          {t(getProductAvailabilityLabelKey(product))}
+        </p>
       </div>
     </div>
   );

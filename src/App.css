@@ -140,6 +140,19 @@ canvas {
     overflow-wrap: anywhere;
 }
 
+.product-availability {
+    margin: 0.45rem 0 0;
+    color: #9ca3af;
+    font-size: 0.78rem;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.product-availability-closed {
+    color: #fca5a5;
+    font-weight: 700;
+}
+
 .product-description {
     font-family: 'Montserrat Light', 'Lato Light', sans-serif;
     font-size: 0.9rem;
