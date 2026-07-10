@@ -5,7 +5,6 @@ import {
   Container, 
   Typography, 
   Box, 
-  Grid, 
   Card, 
   CardMedia, 
   CardContent, 
@@ -109,8 +108,15 @@ const Cart = () => {
       >
         {t('cart.title')}
       </Typography>
-      <Grid container spacing={4} justifyContent="center">
-        <Grid item xs={12} md={7}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1.6fr) minmax(280px, 0.9fr)' },
+          gap: { xs: 3, md: 4 },
+          alignItems: 'start',
+        }}
+      >
+        <Box>
           {items.map(item => (
             <CartItemCard key={item.id} isRemoving={removingItemId === item.id}>
               <CardMedia
@@ -161,8 +167,8 @@ const Cart = () => {
               </Box>
             </CartItemCard>
           ))}
-        </Grid>
-        <Grid item xs={12} md={4}>
+        </Box>
+        <Box>
           <Paper sx={{ p: 3, backgroundColor: '#1e1e1e', color: '#f5f5f5' }}>
             <Typography variant="h5" gutterBottom sx={{ fontFamily: 'Cinzel, serif' }}>
               {t('cart.summary.title')}
@@ -197,8 +203,8 @@ const Cart = () => {
               {t('cart.summary.checkout_button')}
             </Button>
           </Paper>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Container>
   );
 };

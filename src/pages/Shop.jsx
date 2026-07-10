@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Typography, Grid, Box } from '@mui/material';
+import { Container, Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
 import Seo from '../components/Seo';
 
@@ -96,9 +96,8 @@ const Shop = () => {
         {t('shop.title')} 
       </Typography>
 
-      {/* Main Section */}
-      <Grid container spacing={4} justifyContent="center">
-        <Grid item xs={12} md={8} key={mainSection.title}>
+      <Box sx={{ display: 'grid', justifyContent: 'center' }}>
+        <Box sx={{ width: 'min(100%, 760px)' }} key={mainSection.title}>
           <Box
             component={mainSection.enabled ? Link : 'div'}
             to={mainSection.link}
@@ -147,13 +146,20 @@ const Shop = () => {
               </Typography>
             </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       {/* Other Sections */}
-      <Grid container spacing={4} sx={{ mt: 4 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+          gap: { xs: 3, md: 4 },
+          mt: 4,
+        }}
+      >
         {otherSections.map((section) => (
-          <Grid item xs={12} md={6} key={section.title}>
+          <Box key={section.title}>
             <Box
               component={section.enabled ? Link : 'div'}
               to={section.link}
@@ -208,9 +214,9 @@ const Shop = () => {
               )}
               </Box>
             </Box>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
     </Container>
   );
 };
