@@ -16,6 +16,7 @@ const ProductCard = ({ product, onViewDetails }) => {
   const productPrice = getProductPrice(product);
   const productHasOffer = hasProductOffer(product);
   const productAvailable = isProductAvailable(product);
+  const closedMessage = product.availabilityMessage || t('product.closed_message');
   const defaultMaterial = getAvailableMaterials(product)[0] || { value: 'product.material.silver', labelKey: 'product.material.silver' };
 
   // This handler adds the product to the cart and stops the event from bubbling up
@@ -86,6 +87,11 @@ const ProductCard = ({ product, onViewDetails }) => {
         <p className={productAvailable ? 'product-availability' : 'product-availability product-availability-closed'}>
           {t(getProductAvailabilityLabelKey(product))}
         </p>
+        {!productAvailable && (
+          <p className="product-availability-message">
+            {closedMessage}
+          </p>
+        )}
       </div>
     </div>
   );
