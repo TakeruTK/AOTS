@@ -4,7 +4,6 @@ import {
   Container, 
   Typography, 
   Box, 
-  Grid, 
   Select, 
   MenuItem, 
   Button, 
@@ -130,7 +129,15 @@ function ProductDetail() {
   const closedMessage = product.availabilityMessage || t('product.closed_message');
 
   return (
-    <Container sx={{ pt: { xs: 10, md: 15 }, pb: 4, overflow: 'hidden' }}>
+    <Container
+      maxWidth={false}
+      sx={{
+        pt: { xs: 9, md: 11 },
+        pb: { xs: 5, md: 8 },
+        px: { xs: 2, sm: 3, md: 5 },
+        overflow: 'hidden',
+      }}
+    >
       <Seo
         title={`${product.name} | Handmade Gothic Ring`}
         description={`${productDescription} Handmade gothic jewelry by Ashes of the Souls, available for international buyers with PayPal checkout.`}
@@ -169,22 +176,33 @@ function ProductDetail() {
           },
         }}
       />
-      <Grid container spacing={4} justifyContent="center" alignItems="center">
-        <Grid item xs={12} md={6}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'minmax(320px, 520px) minmax(320px, 460px)' },
+          justifyContent: 'center',
+          alignItems: 'start',
+          gap: { xs: 3, md: 5 },
+          width: '100%',
+          maxWidth: 1080,
+          mx: 'auto',
+        }}
+      >
+        <Box>
           <Box 
             onClick={handleOpenModal}
             sx={{
               position: 'relative',
-              mb: 2,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               aspectRatio: '1 / 1',
-              height: 'auto',
-              minHeight: { xs: 280, sm: 360, md: 500 },
+              width: '100%',
+              maxHeight: { xs: 360, sm: 440, md: 'min(58vh, 520px)' },
               backgroundColor: '#222',
               border: '1px solid #333',
               cursor: productImages.length > 0 ? 'pointer' : 'default',
+              overflow: 'hidden',
             }}
           >
             {productImages.length > 0 ? (
@@ -231,10 +249,10 @@ function ProductDetail() {
                 <Typography sx={{ color: '#555' }}>{t('product.no_image')}</Typography>
             )}
           </Box>
-        </Grid>
+        </Box>
 
         {/* Product Details */}
-        <Grid item xs={12} md={6}>
+        <Box sx={{ maxWidth: { xs: '100%', md: 460 }, pt: { md: 1 } }}>
           <Typography
             variant="h3"
             component="h1"
@@ -357,8 +375,8 @@ function ProductDetail() {
           >
             {isAdding ? <CircularProgress size={24} sx={{ color: '#000' }} /> : productAvailable ? t('product.add_to_cart') : t('product.closed_button')}
           </Button>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
       <Dialog
         open={isModalOpen}
         onClose={handleCloseModal}
